@@ -93,12 +93,10 @@ public class DownloadWorker extends SwingWorker<String, String> {
 				mainGUI.checkSelectedVideoFile=new File(downloadLocation+"/"+finalName);
 
 				try {
-					if(mainGUI.checkVideoAudio()){
+					if(VideoPlayback.checkVideoAudio()){
 						mainGUI.currentSelectedVideoFile = mainGUI.checkSelectedVideoFile;
 						mainGUI.currentVideoDisplay.setText(finalName);
-						mainGUI.audioToolsMenuButton.setEnabled(true);
-						mainGUI.textToolsMenuButton.setEnabled(true);
-						mainGUI.downloadMenuButton.setEnabled(true);
+						mainGUI.enableButtons("all");
 					}
 					else{
 						JOptionPane.showMessageDialog(mainGUI.contentPane,"Not a video or audio file",

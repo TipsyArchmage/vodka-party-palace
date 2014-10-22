@@ -74,8 +74,8 @@ public class mainGUI extends JFrame {
 	private JLabel titleLabel;
 	static JPanel playerPanel;
 	private JPanel menuOptionsPanel;
-	private JPanel currentVideoPanel;
-	private JPanel initialPanel;
+	protected static JPanel currentVideoPanel;
+	private static JPanel initialPanel;
 	private JLabel lblCurrentVideoFile;
 	private JButton changeVideoButton;
 	static JTextField currentVideoDisplay;
@@ -192,6 +192,15 @@ public class mainGUI extends JFrame {
 		/**
 		 * Broad GUI Elements
 		 */
+		
+		currentVideoPanel = new JPanel();
+		currentVideoPanel.setBounds(427, 24, 259, 45);
+		contentPane.add(currentVideoPanel);
+		currentVideoPanel.setLayout(null);
+		
+		
+		final VideoPlayback videoGUI= new VideoPlayback();
+		
 		//Menu bar with help button and title
 		menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 698, 21);
@@ -207,10 +216,10 @@ public class mainGUI extends JFrame {
 		titleLabel = new JLabel("VAMIX");
 		menuBar.add(titleLabel);
 		//Panel for the video player
-		playerPanel = new JPanel();
-		playerPanel.setBackground(SystemColor.info);
-		playerPanel.setBounds(3, 24, 420, 286);
-		setUpMediaSurface();
+//		playerPanel = new JPanel();
+//		playerPanel.setBackground(SystemColor.info);
+//		playerPanel.setBounds(3, 24, 420, 286);
+		//setUpMediaSurface();
 		//contentPane.add(playerPanel);
 		
 		/**
@@ -290,11 +299,8 @@ public class mainGUI extends JFrame {
 		downloadMenuButton = new JButton("<html><center>Download<br>New File</html>");
 		
 		downloadMenuButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				audioPanel.setVisible(false);
-				downloadPanel.setVisible(true);
-				initialPanel.setVisible(false);
-				textToolsPanel.setVisible(false);
+			public void actionPerformed(ActionEvent arg0) {				
+				enableButtons("download");
 			}
 		});
 		downloadMenuButton.setBounds(0, 0, 147, 67);
@@ -307,10 +313,9 @@ public class mainGUI extends JFrame {
 		textToolsMenuButton.setEnabled(false);
 		textToolsMenuButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textToolsPanel.setVisible(true);
-				audioPanel.setVisible(false);
-				downloadPanel.setVisible(false);
-				initialPanel.setVisible(false);
+				
+				enableButtons("textTools");
+
 			}
 		});
 		textToolsMenuButton.setBounds(251, 0, 169, 67);
@@ -322,10 +327,9 @@ public class mainGUI extends JFrame {
 		audioToolsMenuButton.setEnabled(false);
 		audioToolsMenuButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				audioPanel.setVisible(true);
-				downloadPanel.setVisible(false);
-				initialPanel.setVisible(false);
-				textToolsPanel.setVisible(false);
+				
+				enableButtons("audioTools");
+
 			}
 		});
 		audioToolsMenuButton.setBounds(147, 0, 104, 67);
@@ -334,410 +338,40 @@ public class mainGUI extends JFrame {
 		menuOptionsPanel.add(audioToolsMenuButton);
 		
 		
-		/**
-		 * Section that deals with the current selected video file
-		 * and changing it
-		 */		
-		//Panel that shows the current selected video
-		currentVideoPanel = new JPanel();
-		currentVideoPanel.setBounds(427, 24, 259, 45);
-		contentPane.add(currentVideoPanel);
-		currentVideoPanel.setLayout(null);
-		//Label for section
-		lblCurrentVideoFile = new JLabel("Current Video File");
-		lblCurrentVideoFile.setBounds(0, 0, 259, 21);
-		lblCurrentVideoFile.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		lblCurrentVideoFile.setHorizontalAlignment(SwingConstants.LEFT);
-		lblCurrentVideoFile.setFont(new Font("Tahoma", Font.BOLD, 14));
-		currentVideoPanel.add(lblCurrentVideoFile);
-		//change the current video
-		changeVideoButton = new JButton("Change");
-		changeVideoButton.addActionListener(new ActionListener() {
-			private JFileChooser selectVideoChooser;
-			
-
-			public void actionPerformed(ActionEvent e) {
-				playbackRate=1;
-				pauseButton.setEnabled(false);
-				playButton.setEnabled(true);
-				pauseButton.setVisible(false);
-				playButton.setVisible(true);
 				
-				video.stop();
-				//File chooser to get video
-				selectVideoChooser=new JFileChooser();				
-				selectVideoChooser.setDialogTitle("Select Video to Play");
-				selectVideoChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);					
-				int exitValue=selectVideoChooser.showOpenDialog(contentPane);
-									
-				
-				if (exitValue == JFileChooser.APPROVE_OPTION) {
-					String videoName=selectVideoChooser.getSelectedFile().getName();
-					checkSelectedVideoFile = selectVideoChooser.getSelectedFile();
-					
-					try {
-						if(checkVideoAudio()){
-						currentSelectedVideoFile = selectVideoChooser.getSelectedFile();
-						currentVideoDisplay.setText(videoName);
-						audioToolsMenuButton.setEnabled(true);
-						textToolsMenuButton.setEnabled(true);
-						downloadMenuButton.setEnabled(true);
-						
-						
-						
-						System.out.print(currentSelectedVideoFile.toString());
-						video.playMedia(currentSelectedVideoFile.toString());
-						video.parseMedia();
-						int videoLength=(int) video.getLength()/1000;
-						video.stop();
-						Audio.videoLocationSlider.setMaximum(videoLength);
-						String videoLengthTime=Audio.getLengthTime(videoLength);
-					
-						Audio.totalVideoLength.setText(videoLengthTime);
-						
-						
-						}
-						else{
-							JOptionPane.showMessageDialog(contentPane,"Not a video or audio file",
-									"Type Error",JOptionPane.ERROR_MESSAGE);   
-								    
-								    
-						}
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					
-				}
-				
-			}
-		});
-		
-		changeVideoButton.setBounds(164, 21, 95, 24);
-		changeVideoButton.setFocusable(false);
-		currentVideoPanel.add(changeVideoButton);
-		//Shows the current video title
-		currentVideoDisplay = new JTextField();
-		currentVideoDisplay.setText("No File Selected");
-		currentVideoDisplay.setFocusable(false);
-		currentVideoDisplay.setEditable(false);
-		currentVideoDisplay.setBounds(0, 23, 165, 20);
-		currentVideoPanel.add(currentVideoDisplay);
-		currentVideoDisplay.setColumns(10);
-		
-		//Play
-		playButton = new JButton("");
-		playButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				playbackRate=1;
-				video.setRate(1);
-				fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforward.png")));
-				// Checks if a file has been selected, if not then display an error message
-				if (currentVideoDisplay.getText().equals("No File Selected")) {
-					JOptionPane.showMessageDialog(contentPane, "Please select a media file to play!");
-				}
-				else if (video.getTime() == -1) {
-					pauseButton.setEnabled(true);
-					playButton.setEnabled(false);
-					pauseButton.setVisible(true);
-					playButton.setVisible(false);
-					video.playMedia(currentSelectedVideoFile.toString());
-					
-					int videoLength;
-					video.parseMedia();
-					videoLength = (int)(video.getMediaMeta().getLength()/1000);
-					end=0;
-					positionSlider.setMaximum(videoLength-5);
-					
-				}
-				
-				else{
-					pauseButton.setEnabled(true);
-					playButton.setEnabled(false);
-					pauseButton.setVisible(true);
-					playButton.setVisible(false);
-					video.pause();
-				}
-						
-			}
-				
-			
-			
-		});
-		playButton.setBorder(null);
-		playButton.setIgnoreRepaint(true);
-		playButton.setFocusPainted(false);
-		playButton.setFocusable(false);
-		playButton.setBackground(Color.BLACK);
-		playButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/play button.png")));
-		playButton.setBounds(188, 349, 35, 25);
-		contentPane.add(playButton);
-		
-		//Fast forward
-		fastForwardButton = new JButton("");
-		fastForwardButton.addActionListener(new ActionListener() {
-			
-
-			public void actionPerformed(ActionEvent e) {
-				if (currentVideoDisplay.getText().equals("No File Selected")) {
-					
-				}
-				else {
-					if(playbackRate<3){
-					playbackRate++;
-					
-					video.setRate(playbackRate);
-					}
-					else{
-						playbackRate=1;
-						video.setRate(1);
-					}
-					
-					if(playbackRate==1){
-						fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforward.png")));
-					}
-					else if(playbackRate==2){
-						fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforward2x.png")));
-					}
-					else if(playbackRate==3){
-						fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforwardselected.png")));
-					}
-					
-				}
-			}
-		});
-		fastForwardButton.setSelectedIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforwardselected.png")));
-		fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforward.png")));
-		fastForwardButton.setBorder(null);
-		fastForwardButton.setBackground(Color.BLACK);
-		fastForwardButton.setBounds(235, 349, 35, 25);
-		contentPane.add(fastForwardButton);
-		
-		//Rewind!
-		rewindButton = new JButton("");
-		rewindButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (currentVideoDisplay.getText().equals("No File Selected")) {
-					
-				}
-				else {
-					end=0;
-					video.skip(-5000);
-				}
-			}
-		});
-		
-		rewindButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/rewind.png")));
-		rewindButton.setIgnoreRepaint(true);
-		rewindButton.setFocusable(false);
-		rewindButton.setFocusPainted(false);
-		rewindButton.setBorder(null);
-		rewindButton.setBackground(Color.BLACK);
-		rewindButton.setBounds(141, 349, 35, 25);
-		contentPane.add(rewindButton);
-		
-		//Pause Video!
-		pauseButton = new JButton("");
-		pauseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				playbackRate=1;
-				video.setRate(1);
-				fastForwardButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/fastforward.png")));
-				pauseButton.setEnabled(false);
-				
-				playButton.setEnabled(true);
-				pauseButton.setVisible(false);
-				playButton.setVisible(true);
-				video.pause();
-			}
-		});
-		pauseButton.setEnabled(false);
-		pauseButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/pause.png")));
-		pauseButton.setIgnoreRepaint(true);
-		pauseButton.setFocusable(false);
-		pauseButton.setFocusPainted(false);
-		pauseButton.setBorder(null);
-		pauseButton.setBackground(Color.BLACK);
-		pauseButton.setBounds(188, 349, 35, 25);
-		contentPane.add(pauseButton);
-		
-		JSlider slider = new JSlider();
-		slider.setBackground(Color.BLACK);
-		slider.setValue(100);
-		slider.addChangeListener(new SliderListener());
-		slider.setBounds(326, 354, 87, 16);
-		contentPane.add(slider);
-		
-		JPanel volumeIcon = new JPanel();
-		volumeIcon.setBackground(Color.BLACK);
-		volumeIcon.setBounds(290, 349, 35, 25);
-		contentPane.add(volumeIcon);
-		volumeIcon.setLayout(null);
-		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/volume.png")));
-		lblNewLabel_2.setBounds(0, 0, 70, 25);
-		volumeIcon.add(lblNewLabel_2);
-		
-		//Stop video!
-		JButton stopButton = new JButton("");
-		stopButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				playbackRate=1;
-				video.setRate(1);
-				pauseButton.setEnabled(false);
-				
-				playButton.setEnabled(true);
-				pauseButton.setVisible(false);
-				playButton.setVisible(true);
-				video.stop();
-			}
-		});
-		stopButton.setIcon(new ImageIcon(mainGUI.class.getResource("/visualResources/stop.png")));
-		stopButton.setIgnoreRepaint(true);
-		stopButton.setFocusable(false);
-		stopButton.setFocusPainted(false);
-		stopButton.setBorder(null);
-		stopButton.setBackground(Color.BLACK);
-		stopButton.setBounds(45, 349, 35, 25);
-		contentPane.add(stopButton);
-
-				Timer timer = new Timer(100, new ActionListener() {
-					
-
-					@Override
-					// Timer gets media's elapsed time in ms every 100ms, then converts this value to hours,
-					// minutes, and seconds, and updates the media's elapsed time label and displays it in HH:MM:SS format
-					public void actionPerformed(ActionEvent e) {
-						long time = video.getTime();
-						int hours = (int) time / 3600000;
-						int remainder = (int) time - hours * 3600000;
-						int mins = remainder / 60000;
-						remainder = remainder - mins * 60000;
-						int secs = remainder / 1000;
-						
-						//Set slider
-						positionSlider.setValue((int) video.getTime()/1000);
-						
-						// Convert from int to String
-						String h = String.valueOf(hours);
-						String m = String.valueOf(mins);
-						String s = String.valueOf(secs);
-						// Adds a leading 0 if the hours/minutes/seconds value only contains one digit
-						if (h.length() == 1) {
-							h = "0" + h;
-						}
-						if (m.length() == 1) {
-							m = "0" + m;
-						}
-						if (s.length() == 1) {
-							s = "0" + s;
-						}
-						timeDisplay.setText(h + ":" + m + ":" + s);
-						
-						if((video.getTime()>=(video.getLength()-1000))&&end==0){
-							pauseButton.setEnabled(false);
-							playButton.setEnabled(true);
-							pauseButton.setVisible(false);
-							playButton.setVisible(true);
-							end=1;
-							video.pause();
-						}
-					}
-				});		
-				timer.start();
-		
-		
-		
-
-		
 		
 	}
 	
-	// Sets up a canvas video surface, ready for media to be played on
-	
-	public static void setUpMediaSurface() {
-		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-		mediaPlayerComponent.setBounds(0, 0, 420, 304);
-		mediaPlayerComponent.getVideoSurface().setBounds(0, 0, 420, 305);
-		mediaPlayerComponent.getVideoSurface().setBackground(Color.LIGHT_GRAY);
-		Canvas canvas = new Canvas();
-		canvas.setBounds(0, 0, 0, 0);
-		canvas.setVisible(true);
-		canvas.setBackground(SystemColor.info);
-		// Creates a media player to play media
-		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
-		CanvasVideoSurface videoSurface = mediaPlayerFactory.newVideoSurface(canvas);
-		EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
-		mediaPlayer.setVideoSurface(videoSurface);
-				playerPanel.setLayout(null);
-		// Adds the canvas to the center of the video panel
-		playerPanel.add(canvas);
-		video = mediaPlayerComponent.getMediaPlayer();
 		
+	//Method to enable so enable and switch between menu options
+	public static void enableButtons(String input) {
+		 
+	        
+	        switch (input) {
+	            case "download":  audioPanel.setVisible(false);
+						 		  downloadPanel.setVisible(true);
+						 		  initialPanel.setVisible(false);
+						 		  textToolsPanel.setVisible(false);
+						 		  break;
+	            case "textTools": textToolsPanel.setVisible(true);
+								  audioPanel.setVisible(false);
+								  downloadPanel.setVisible(false);
+								  initialPanel.setVisible(false); 
+								  break;	
+	            case "audioTools":audioPanel.setVisible(true);
+								  downloadPanel.setVisible(false);
+								  initialPanel.setVisible(false);
+								  textToolsPanel.setVisible(false);
+								  break;
+	            case "all":       audioToolsMenuButton.setEnabled(true);
+								  textToolsMenuButton.setEnabled(true);
+								  downloadMenuButton.setEnabled(true);
+								  break;
+								  
+				
+	        }
 		
-		//Get Timer on the video
-		// Displays media's elapsed time
-				timeDisplay = new JLabel("00:00:00");
-				timeDisplay.setForeground(Color.WHITE);
-				timeDisplay.setFont(new Font("Dialog", Font.BOLD, 12));
-				timeDisplay.setBounds(160, 322, 82, 21);
-				contentPane.add(timeDisplay);
-				timeDisplay.setHorizontalAlignment(SwingConstants.CENTER);
-				timeDisplay.setBackground(Color.BLACK);
-		
-		//Slider to change video position
-		positionSlider = new JSlider();
-		positionSlider.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-					//video.pause();
-					JSlider source = (JSlider)e.getSource();
-				//if (!source.getValueIsAdjusting()) {
-					int place = (int)source.getValue();
-					end=0;
-					video.setTime(place*1000);
-					//video.pause();
-				//}
-			}
-		});
-		
-		
-		positionSlider.setValue(0);
-		positionSlider.setBounds(3, 311, 420, 16);
-		//positionSlider.addChangeListener(new SliderVideoListener());
-		contentPane.add(positionSlider);
-		positionSlider.setBackground(Color.BLACK);
-		playerPanel.add(mediaPlayerComponent);
-		mediaPlayerComponent.setLayout(null);
-		contentPane.add(playerPanel);
-	}
-
-	// Checks if the selected file is either a video or audio file
-	public static Boolean checkVideoAudio() throws IOException {
-		ProcessBuilder builder = new ProcessBuilder("file", checkSelectedVideoFile.toString());
-		builder.redirectErrorStream(true);
-		Process process = builder.start();
-		InputStream stdout = process.getInputStream();
-		BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-		String line = null;
-		while ((line = stdoutBuffered.readLine()) != null ) {
-			if (line.contains("Media") || line.contains("Audio")) {
-				return true;
-			}
-		}
-		return false;
+	 
 	}
 	
-	class SliderListener implements ChangeListener {
-		// Change event which sets the volume of the media relative to the position of the volume slider
-		public void stateChanged(ChangeEvent e) {
-			JSlider source = (JSlider)e.getSource();
-			//if (!source.getValueIsAdjusting()) {
-				int volume = (int)source.getValue();
-				video.setVolume(volume);
-			//}
-		}
-	}
 }
