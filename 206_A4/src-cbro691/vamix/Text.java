@@ -76,92 +76,102 @@ public class Text extends JPanel {
 	
 	public Text() {
 		//Title
-				textToolsTitle = new JLabel("Text Tools");
-				textToolsTitle.setHorizontalAlignment(SwingConstants.CENTER);
-				textToolsTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
-				textToolsTitle.setBorder(new LineBorder(new Color(0, 0, 0)));
-				textToolsTitle.setBounds(0, 0, 259, 27);
-				mainGUI.textToolsPanel.add(textToolsTitle);
-				
-				//Button Group to contain radio buttons
-				buttonOptionGroup = new ButtonGroup();
-				
-				lblEnterTextMessage = new JLabel("Enter Text Message ");
-				lblEnterTextMessage.setBounds(10, 38, 234, 14);
-				mainGUI.textToolsPanel.add(lblEnterTextMessage);
-				
-				JTextArea userMessageInput = new JTextArea();
-				userMessageInput.setLineWrap(true);
-				userMessageInput.setBorder(new LineBorder(new Color(0, 0, 0)));
-				userMessageInput.setWrapStyleWord(true);
-				userMessageInput.setBounds(20, 63, 214, 73);
-				mainGUI.textToolsPanel.add(userMessageInput);
-				
-				JButton fontButton = new JButton("Font and Size");
-				fontButton.setFocusable(false);
-				fontButton.setBounds(0, 148, 133, 23);
-				mainGUI.textToolsPanel.add(fontButton);
-				
-				JButton colourButton = new JButton("Colour");
-				colourButton.setFocusable(false);
-				colourButton.setBounds(131, 148, 128, 23);
-				mainGUI.textToolsPanel.add(colourButton);
-				
-				JLabel lblWhenDoYou = new JLabel("<html>When do you want the text to appear?</html>");
-				lblWhenDoYou.setBounds(10, 179, 224, 36);
-				mainGUI.textToolsPanel.add(lblWhenDoYou);
-				
-				JSlider textPlacementSlider = new JSlider();
-				textPlacementSlider.setAutoscrolls(true);
-				textPlacementSlider.setOpaque(false);
-				textPlacementSlider.setValue(0);
-				textPlacementSlider.setBounds(19, 210, 200, 26);
-				mainGUI.textToolsPanel.add(textPlacementSlider);
-				
-				textStartTimeLabel = new JLabel("00:00");
-				textStartTimeLabel.setBounds(105, 231, 46, 14);
-				mainGUI.textToolsPanel.add(textStartTimeLabel);
-				
-				lblHowLongShould = new JLabel("<html>How long should the text display for?</html>");
-				lblHowLongShould.setBounds(10, 245, 224, 34);
-				mainGUI.textToolsPanel.add(lblHowLongShould);
-				
-				textDisplayTimeSlider = new JSlider();
-				textDisplayTimeSlider.setValue(0);
-				textDisplayTimeSlider.setOpaque(false);
-				textDisplayTimeSlider.setAutoscrolls(true);
-				textDisplayTimeSlider.setBounds(19, 274, 200, 26);
-				mainGUI.textToolsPanel.add(textDisplayTimeSlider);
-				
-				textDisplayTimeLabel = new JLabel("00:00");
-				textDisplayTimeLabel.setBounds(105, 294, 46, 14);
-				mainGUI.textToolsPanel.add(textDisplayTimeLabel);
-				
-				removeTextButton = new JButton("Remove All");
-				removeTextButton.setFocusable(false);
-				removeTextButton.setBounds(10, 338, 123, 23);
-				mainGUI.textToolsPanel.add(removeTextButton);
-				
-				saveTextButton = new JButton("Save");
-				saveTextButton.addActionListener(new ActionListener() {
-					private JFileChooser saveNewText;
+		textToolsTitle = new JLabel("Text Tools");
+		textToolsTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		textToolsTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
+		textToolsTitle.setBorder(new LineBorder(new Color(0, 0, 0)));
+		textToolsTitle.setBounds(0, 0, 259, 27);
+		mainGUI.textToolsPanel.add(textToolsTitle);
+		
+		//Button Group to contain radio buttons
+		buttonOptionGroup = new ButtonGroup();
+		
+		lblEnterTextMessage = new JLabel("Enter Text Message ");
+		lblEnterTextMessage.setBounds(10, 38, 234, 14);
+		mainGUI.textToolsPanel.add(lblEnterTextMessage);
+		
+		//Text area to capture user input
+		JTextArea userMessageInput = new JTextArea();
+		userMessageInput.setLineWrap(true);
+		userMessageInput.setBorder(new LineBorder(new Color(0, 0, 0)));
+		userMessageInput.setWrapStyleWord(true);
+		userMessageInput.setBounds(20, 63, 214, 73);
+		mainGUI.textToolsPanel.add(userMessageInput);
+		
+		//Button to let the user adjust font and size
+		JButton fontButton = new JButton("Font and Size");
+		fontButton.setFocusable(false);
+		fontButton.setBounds(0, 148, 133, 23);
+		mainGUI.textToolsPanel.add(fontButton);
+		
+		//Button to let the user adjust colour
+		JButton colourButton = new JButton("Colour");
+		colourButton.setFocusable(false);
+		colourButton.setBounds(131, 148, 128, 23);
+		mainGUI.textToolsPanel.add(colourButton);
+		
+		
+		JLabel lblWhenDoYou = new JLabel("<html>When do you want the text to appear?</html>");
+		lblWhenDoYou.setBounds(10, 179, 224, 36);
+		mainGUI.textToolsPanel.add(lblWhenDoYou);
+		
+		//Slider to let the user select where to place the text
+		JSlider textPlacementSlider = new JSlider();
+		textPlacementSlider.setAutoscrolls(true);
+		textPlacementSlider.setOpaque(false);
+		textPlacementSlider.setValue(0);
+		textPlacementSlider.setBounds(19, 210, 200, 26);
+		mainGUI.textToolsPanel.add(textPlacementSlider);
+		
+		//Label showing the video length
+		textStartTimeLabel = new JLabel("00:00");
+		textStartTimeLabel.setBounds(105, 231, 46, 14);
+		mainGUI.textToolsPanel.add(textStartTimeLabel);
+		
+		lblHowLongShould = new JLabel("<html>How long should the text display for?</html>");
+		lblHowLongShould.setBounds(10, 245, 224, 34);
+		mainGUI.textToolsPanel.add(lblHowLongShould);
+		
+		//Slider to choose how long the text displays for
+		textDisplayTimeSlider = new JSlider();
+		textDisplayTimeSlider.setValue(0);
+		textDisplayTimeSlider.setOpaque(false);
+		textDisplayTimeSlider.setAutoscrolls(true);
+		textDisplayTimeSlider.setBounds(19, 274, 200, 26);
+		mainGUI.textToolsPanel.add(textDisplayTimeSlider);
+		
+		//Label showing selection of second slider
+		textDisplayTimeLabel = new JLabel("00:00");
+		textDisplayTimeLabel.setBounds(105, 294, 46, 14);
+		mainGUI.textToolsPanel.add(textDisplayTimeLabel);
+		
+		//Button to remove all text
+		removeTextButton = new JButton("Remove All");
+		removeTextButton.setFocusable(false);
+		removeTextButton.setBounds(10, 338, 123, 23);
+		mainGUI.textToolsPanel.add(removeTextButton);
+		
+		//Button to save changes
+		saveTextButton = new JButton("Save");
+		saveTextButton.addActionListener(new ActionListener() {
+			private JFileChooser saveNewText;
 
-					public void actionPerformed(ActionEvent arg0) {
-						//Create Directory chooser for saving text file
-						saveNewText=new JFileChooser();				
-						saveNewText.setDialogTitle("Select Directory to save to");
-						saveNewText.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);	
-						saveNewText.setAcceptAllFileFilterUsed(false);
-						int exitValue=saveNewText.showOpenDialog(mainGUI.contentPane);
-						
-						if (exitValue == JFileChooser.APPROVE_OPTION) {
-							saveTextFile = saveNewText.getSelectedFile();
-						}
-					}
-				});
-				saveTextButton.setFocusable(false);
-				saveTextButton.setBounds(146, 338, 98, 23);
-				mainGUI.textToolsPanel.add(saveTextButton);
+			public void actionPerformed(ActionEvent arg0) {
+				//Create Directory chooser for saving text file
+				saveNewText=new JFileChooser();				
+				saveNewText.setDialogTitle("Select Directory to save to");
+				saveNewText.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);	
+				saveNewText.setAcceptAllFileFilterUsed(false);
+				int exitValue=saveNewText.showOpenDialog(mainGUI.contentPane);
+				
+				if (exitValue == JFileChooser.APPROVE_OPTION) {
+					saveTextFile = saveNewText.getSelectedFile();
+				}
+			}
+		});
+		saveTextButton.setFocusable(false);
+		saveTextButton.setBounds(146, 338, 98, 23);
+		mainGUI.textToolsPanel.add(saveTextButton);
 
 	}
 

@@ -72,59 +72,19 @@ public class mainGUI extends JFrame {
 	private JMenuBar menuBar;
 	private JButton helpButton;
 	private JLabel titleLabel;
-	static JPanel playerPanel;
+	//static JPanel VideoPlayback;
 	private JPanel menuOptionsPanel;
 	protected static JPanel currentVideoPanel;
 	private static JPanel initialPanel;
-	private JLabel lblCurrentVideoFile;
-	private JButton changeVideoButton;
 	static JTextField currentVideoDisplay;
 	static JButton downloadMenuButton;
 	static JButton textToolsMenuButton;
 	static JButton audioToolsMenuButton;
 	static JPanel downloadPanel;
-	private JLabel lblDownload;
-	private JLabel lblEnterUrlOf;
-	
-	private JLabel openSourceCheckLabel;
-	private JCheckBox chckbxThisIsOpen;
-	private JLabel lblWhereDoYou;
-	private JTextField txtNoLocationSelected;
-	private JButton changeSaveDownloadButton;
 	static JButton downloadButton;
-	private JProgressBar progressBar;
 	static JPanel audioPanel;
-	private JLabel lblAudioTools;
-	private JButton removeAudioButton;
-	private JLabel lblSelectAudioTo;
-	private JTextField currentAudioTrack;
-	private JButton changeAudioTrackButton;
-	private JSlider extractStartSlider;
-	private JLabel lblSelectTheStart;
-	private JLabel initialTimeLabel;
-	private JLabel endTimeAudioLabel;
-	private JLabel totalLength;
-	private JLabel initialLength;
-	private JSlider extractLengthAudio;
-	private JLabel lblSelectTheLength;
-	private JLabel videoLocationTitle;
-	private JLabel initalVideoLength;
-	private JLabel totalVideoLength;
-	private JSlider videoLocationSlider;
-	private JButton btnNewButton;
 	static JPanel textToolsPanel;
-	private JLabel textToolsTitle;
-	private JLabel lblEnterTextMessage;
-	private JLabel textStartTimeLabel;
-	private JLabel lblHowLongShould;
-	private JSlider textDisplayTimeSlider;
-	private JLabel textDisplayTimeLabel;
-	private JButton removeTextButton;
-	private JButton saveTextButton;
-	private ButtonGroup buttonOptionGroup=new ButtonGroup();
-	private int playbackRate=1;
-	private static int end=0;
-	
+		
 	//Important Variables
 	private File saveDownloadFile;
 	static File currentSelectedVideoFile;
@@ -137,12 +97,7 @@ public class mainGUI extends JFrame {
 	static EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	static EmbeddedMediaPlayer video;
 	protected static File checkSelectedVideoFile;
-	private JButton playButton;
-	private JButton fastForwardButton;
-	private JButton pauseButton;
-	private JButton rewindButton;
-	private static JLabel timeDisplay;
-	private static JSlider positionSlider;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -193,6 +148,8 @@ public class mainGUI extends JFrame {
 		 * Broad GUI Elements
 		 */
 		
+		
+		//Initialise the video playback GUI features
 		currentVideoPanel = new JPanel();
 		currentVideoPanel.setBounds(427, 24, 259, 45);
 		contentPane.add(currentVideoPanel);

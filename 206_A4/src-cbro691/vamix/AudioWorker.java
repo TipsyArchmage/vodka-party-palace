@@ -193,9 +193,9 @@ public class AudioWorker extends SwingWorker {
 		else if(mode==5||mode==6){
 			//deletePlease.delete();
 			Audio.outputTEMPFile.delete();
-			Audio.videoLocationSlider.setEnabled(true);
-			Audio.extractLengthAudio.setEnabled(true);
-			Audio.extractStartSlider.setEnabled(true);
+			AudioSliders.videoLocationSlider.setEnabled(true);
+			AudioSliders.extractLengthAudio.setEnabled(true);
+			AudioSliders.extractStartSlider.setEnabled(true);
 			JOptionPane.showMessageDialog(new JPanel(), "Audio Overlay complete!");
 			//Auto set current video
 			mainGUI.currentSelectedVideoFile=new File(outputNameText);

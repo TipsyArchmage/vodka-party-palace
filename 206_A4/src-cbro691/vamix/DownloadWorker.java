@@ -110,6 +110,9 @@ public class DownloadWorker extends SwingWorker<String, String> {
 				}
 			}
 		}
+	   
+	   
+	   //Different outputs for different error values
 		else if(exit==1){
 			JOptionPane.showMessageDialog(new JPanel(), "Error!");
 		}
