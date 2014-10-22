@@ -15,55 +15,21 @@ import java.awt.Component;
 
 import javax.swing.Box;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.SystemColor;
 import java.awt.Font;
 
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JSlider;
-import javax.swing.JRadioButton;
-import javax.swing.Timer;
-
-import java.awt.Rectangle;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import javax.swing.JTextArea;
-import javax.swing.JFileChooser;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
-
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 public class mainGUI extends JFrame {
 
@@ -103,6 +69,7 @@ public class mainGUI extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					mainGUI frame = new mainGUI();
@@ -256,6 +223,7 @@ public class mainGUI extends JFrame {
 		downloadMenuButton = new JButton("<html><center>Download<br>New File</html>");
 		
 		downloadMenuButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {				
 				enableButtons("download");
 			}
@@ -269,6 +237,7 @@ public class mainGUI extends JFrame {
 		textToolsMenuButton = new JButton("<html><center>Add Text<br>to the Video</html>");
 		textToolsMenuButton.setEnabled(false);
 		textToolsMenuButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				enableButtons("textTools");
@@ -283,6 +252,7 @@ public class mainGUI extends JFrame {
 		audioToolsMenuButton = new JButton("<html><center>Audio<br>Tools</html>");
 		audioToolsMenuButton.setEnabled(false);
 		audioToolsMenuButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				enableButtons("audioTools");

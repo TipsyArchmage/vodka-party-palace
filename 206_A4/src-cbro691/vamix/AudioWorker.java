@@ -43,50 +43,43 @@ public class AudioWorker extends SwingWorker {
 	protected String doInBackground() throws Exception {
 		// Creates a video file containing the selected video file with the selected audio file overlaid on top of its audio
 		builder = new ProcessBuilder();
-		if(mode==1){
-			builder = new ProcessBuilder("avconv","-y", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameText);
-		}
-		else if(mode==2){
-			builder = new ProcessBuilder("avconv","-y", "-i", mainGUI.currentSelectedVideoFile.toString(), "-vcodec", "copy", "-an", outputNameText);
-		}
-		else if (mode==3){
-			builder.command("avconv", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
-		}
-		else if (mode==4){
+		
+		//Extract audio required first
+		if (mode==4){
 			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
 			
 			builder.command("avconv", "-ss", 
 					+0+":"+startMin+":"+startSec,"-i",currentAudioFilePath,"-t",0+":"+durationMin+":"+durationSec
 					,"-codec:a aac -strict experimental","copy",outputNameText);
 		}
-		//Replace
-		else if (mode==5){
-			
-			//File TEMPmp3 = soundOfSilence(Audio.videoLocationSlider.getValue(), currentAudioFilePath);
-
-			//ffmpeg -i video.avi -i audio.mp3 -map 0 -map 1 -codec copy -shortest output_video.avi
-			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
-			builder.command("avconv","-y", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
-		}
-		//Overlay
-		else if (mode==6){
-//			System.out.print("\n\n\n\n");
-//			System.out.print("BEP");
-//			System.out.print("\n\n\n\n\n");
-			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
-			
-			builder.command("avconv","-y", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
-		}
-		
-		builder.redirectErrorStream(true);
-		Process process = builder.start();
-		InputStream stdout = process.getInputStream();
-		BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-		String line = null;
-		// Read linux output from avconv command
-		while ((line = stdoutBuffered.readLine()) != null ) {
-			System.out.println(line);
-		}
+//		//Replace
+//		else if (mode==5){
+//			
+//			//File TEMPmp3 = soundOfSilence(Audio.videoLocationSlider.getValue(), currentAudioFilePath);
+//
+//			//ffmpeg -i video.avi -i audio.mp3 -map 0 -map 1 -codec copy -shortest output_video.avi
+//			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
+//			builder.command("avconv","-y", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
+//		}
+//		//Overlay
+//		else if (mode==6){
+////			System.out.print("\n\n\n\n");
+////			System.out.print("BEP");
+////			System.out.print("\n\n\n\n\n");
+//			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
+//			
+//			builder.command("avconv","-y", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
+//		}
+//		
+//		builder.redirectErrorStream(true);
+//		Process process = builder.start();
+//		InputStream stdout = process.getInputStream();
+//		BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+//		String line = null;
+//		// Read linux output from avconv command
+//		while ((line = stdoutBuffered.readLine()) != null ) {
+//			System.out.println(line);
+//		}
 		return null;
 	}
 	
@@ -151,13 +144,8 @@ public class AudioWorker extends SwingWorker {
 
 	protected void done(){
 		
-		if(mode==1||mode==2){
-		JOptionPane.showMessageDialog(new JPanel(), "Audio Removed!");
-		}
-//		else if(mode==2){
-//			JOptionPane.showMessageDialog(new JPanel(), "Audio Removed!");
-//		}
-		else if(mode==4){
+		//Result message 
+		if(mode==4){
 			
 			//avconv -i 1.mp4 -i 2.mp3 -filter_complex amix=inputs=2:duration=first:dropout_transition=3 -strict experimental TEST.mp4
 			//avconv -i sintel_trailer-480p.mp4 -i TEST.mp4 -map 0 -map 1:0 -c:v copy -c:a copy -ac 1 TES1T.mp4
@@ -165,6 +153,9 @@ public class AudioWorker extends SwingWorker {
 			
 			//JOptionPane.showMessageDialog(new JPanel(), "The File will automatically set as the current video");
 			Audio.outputTEMPFile=new File(outputNameText);
+			
+			//Check if the user wants to replace or overlay audio
+			
 			//Replace
 			if(Audio.replaceAudioOptionRadioBtn.isSelected()){
 				String nameNoExtension=Audio.saveAudioNewFile.getAbsolutePath()+"/"+mainGUI.currentSelectedVideoFile.getName();

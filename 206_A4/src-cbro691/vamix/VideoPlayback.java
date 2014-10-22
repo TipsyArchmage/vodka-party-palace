@@ -509,7 +509,7 @@ public class VideoPlayback extends JPanel{
 			BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
 			String line = null;
 			while ((line = stdoutBuffered.readLine()) != null ) {
-				if (line.contains("Media") || line.contains("audio")) {
+				if (line.contains("Media") || line.contains("audio")||line.contains("Audio")) {
 					return true;
 				}
 			}

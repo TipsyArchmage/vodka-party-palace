@@ -229,13 +229,13 @@ public class Audio extends JPanel{
 					CanvasVideoSurface videoSurface = mediaPlayerFactory.newVideoSurface(canvas);
 					EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
 					mediaPlayer.setVideoSurface(videoSurface);
-							VideoPlayback.playerPanel.setLayout(null);
+					VideoPlayback.playerPanel.setLayout(null);
 					// Adds the canvas to the center of the video panel
-							VideoPlayback.playerPanel.add(canvas);
+					VideoPlayback.playerPanel.add(canvas);
 					audio = mainGUI.mediaPlayerComponent.getMediaPlayer();
 					VideoPlayback.playerPanel.add(mainGUI.mediaPlayerComponent);
 					mainGUI.mediaPlayerComponent.setLayout(null);
-					mainGUI.contentPane.add(VideoPlayback.playerPanel);
+					//mainGUI.contentPane.add(VideoPlayback.playerPanel);
 					
 					
 					
@@ -409,7 +409,7 @@ public class Audio extends JPanel{
 		try {
 			if (outputType.equals("video.audio")) {
 				// Creates an audio file containing the audio stripped from the selected video file
-				AudioWorker worker=new AudioWorker(mainGUI.currentSelectedVideoFile.toString(), null, outputNameTextAudio, 1,0,0,0,0);
+				StripAudioWorker worker=new StripAudioWorker(mainGUI.currentSelectedVideoFile.toString(), null, outputNameTextAudio, 1);
 				builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameTextAudio);
 				worker.execute();
 				
@@ -417,7 +417,7 @@ public class Audio extends JPanel{
 			}
 			if (outputType.equals("video")||outputType.equals("video.audio")) {
 				// Creates a video file containing the video selected with its audio stripped
-				AudioWorker worker=new AudioWorker(mainGUI.currentSelectedVideoFile.toString(), null, outputNameTextVideo, 2,0,0,0,0);
+				StripAudioWorker worker=new StripAudioWorker(mainGUI.currentSelectedVideoFile.toString(), null, outputNameTextVideo, 2);
 				builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-vcodec", "copy", "-an", outputNameTextVideo);
 				worker.execute();
 				
