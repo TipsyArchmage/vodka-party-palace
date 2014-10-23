@@ -58,9 +58,16 @@ import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class Audio extends JPanel{
+/**
+ * 
+ *This class manages all the GUI tools and functionality of the audio manipulation
+ *section. This includes being able to call the two different worker classes that actually
+ *carry out the functionality. It also calls the audio slider class which actually manages the 
+ *different sliders.
+ *
+ */
 
-	
+public class Audio extends JPanel{	
 	
 	static JPanel downloadPanel;	
 	static JButton downloadButton;
@@ -98,6 +105,7 @@ public class Audio extends JPanel{
 	 * @param args
 	 */
 	public Audio() {
+		//Title of section
 		lblAudioTools = new JLabel("Audio Tools\r\n");
 		lblAudioTools.setBounds(0, 0, 259, 27);
 		lblAudioTools.setHorizontalAlignment(SwingConstants.CENTER);
@@ -178,6 +186,7 @@ public class Audio extends JPanel{
 					stripAudio(outputType);
 					break;
 				case 2:
+					//Cancels the option
 					return;
 				}
 				
@@ -214,49 +223,58 @@ public class Audio extends JPanel{
 				if (exitValue == JFileChooser.APPROVE_OPTION) {					
 				int accept=0;
 				int audioLength=0;
-				while(accept==0){	
-					currentSelectedAudioFile = selectAudioChooser.getSelectedFile();
-					currentAudioTrack.setText(selectAudioChooser.getSelectedFile().getName());
-					
-					mainGUI.mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-					mainGUI.mediaPlayerComponent.setBounds(0, 0, 420, 304);
-					mainGUI.mediaPlayerComponent.getVideoSurface().setBounds(0, 0, 420, 305);
-					mainGUI.mediaPlayerComponent.getVideoSurface().setBackground(SystemColor.info);
-					Canvas canvas = new Canvas();
-					canvas.setBounds(0, 0, 0, 0);
-					canvas.setVisible(true);
-					canvas.setBackground(SystemColor.info);
-					// Creates a media player to play media
-					MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
-					CanvasVideoSurface videoSurface = mediaPlayerFactory.newVideoSurface(canvas);
-					EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
-					mediaPlayer.setVideoSurface(videoSurface);
-					VideoPlayback.playerPanel.setLayout(null);
-					// Adds the canvas to the center of the video panel
-					VideoPlayback.playerPanel.add(canvas);
-					audio = mainGUI.mediaPlayerComponent.getMediaPlayer();
-					VideoPlayback.playerPanel.add(mainGUI.mediaPlayerComponent);
-					mainGUI.mediaPlayerComponent.setLayout(null);
-					//mainGUI.contentPane.add(VideoPlayback.playerPanel);
-					
-					
-					
-					audio.playMedia(currentSelectedAudioFile.toString());
-					audio.parseMedia();
-					audioLength=(int) audio.getLength()/1000;
-					audio.stop();
-					if(audioLength==0){
-						
+				currentSelectedAudioFile = selectAudioChooser.getSelectedFile();
+				//Check audio is actually audio
+				try {
+					if(checkAudioOverlay()){
+						while(accept==0){								
+							
+							//Set up a playback component so the selected audio can actually be parsed
+							currentAudioTrack.setText(selectAudioChooser.getSelectedFile().getName());
+							
+							mainGUI.mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+							mainGUI.mediaPlayerComponent.setBounds(0, 0, 420, 304);
+							mainGUI.mediaPlayerComponent.getVideoSurface().setBounds(0, 0, 420, 305);
+							mainGUI.mediaPlayerComponent.getVideoSurface().setBackground(SystemColor.info);
+							Canvas canvas = new Canvas();
+							canvas.setBounds(0, 0, 0, 0);
+							canvas.setVisible(true);
+							canvas.setBackground(SystemColor.info);
+							// Creates a media player to play media
+							MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
+							CanvasVideoSurface videoSurface = mediaPlayerFactory.newVideoSurface(canvas);
+							EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
+							mediaPlayer.setVideoSurface(videoSurface);
+							VideoPlayback.playerPanel.setLayout(null);
+							// Adds the canvas to the center of the video panel
+							VideoPlayback.playerPanel.add(canvas);
+							audio = mainGUI.mediaPlayerComponent.getMediaPlayer();
+							VideoPlayback.playerPanel.add(mainGUI.mediaPlayerComponent);
+							mainGUI.mediaPlayerComponent.setLayout(null);
+							
+							//Get the length of the audio
+							audio.playMedia(currentSelectedAudioFile.toString());
+							audio.parseMedia();
+							audioLength=(int) audio.getLength()/1000;
+							audio.stop();
+							if(audioLength==0){
+								//Occasionally the audio isn't parsed properly
+								//This loops until it is
+							}
+							else{
+								accept=1;
+							}
+						}	
 					}
 					else{
-						accept=1;
+						JOptionPane.showMessageDialog(mainGUI.contentPane,"Not an audio file",
+								"Type Error",JOptionPane.ERROR_MESSAGE);
 					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}	
 					
-					
-//					//Change play button actions for the preview function
-//					mainGUI.video=audio;
-//					mainGUI.setUpMediaSurface();
 					
 					//Set slider lengths to default values
 					AudioSliders.extractStartSlider.setValue(0);
@@ -275,7 +293,7 @@ public class Audio extends JPanel{
 		changeAudioTrackButton.setFocusable(false);
 		changeAudioTrackButton.setBounds(164, 90, 95, 24);
 		mainGUI.audioPanel.add(changeAudioTrackButton);
-		
+		//Initialise sliders
 		AudioSliders sliders=new AudioSliders();
 
 		//Option to overlay audio
@@ -286,6 +304,7 @@ public class Audio extends JPanel{
 		overlayOptionRadioBtn.setFocusable(false);
 		overlayOptionRadioBtn.setBounds(0, 320, 182, 23);
 		
+		//NOTE: Does not function. Has been removed from GUI until further implementation
 		//mainGUI.audioPanel.add(overlayOptionRadioBtn);
 
 		//Option to replace audio
@@ -293,7 +312,7 @@ public class Audio extends JPanel{
 		replaceAudioOptionRadioBtn.setFont(new Font("Dialog", Font.BOLD, 11));
 		replaceAudioOptionRadioBtn.setOpaque(false);
 		replaceAudioOptionRadioBtn.setFocusable(false);
-		replaceAudioOptionRadioBtn.setBounds(0, 342, 195, 23);
+		replaceAudioOptionRadioBtn.setBounds(0, 335, 195, 23);
 		replaceAudioOptionRadioBtn.setSelected(true);
 		mainGUI.audioPanel.add(replaceAudioOptionRadioBtn);
 		
@@ -303,13 +322,11 @@ public class Audio extends JPanel{
 		//Button to start process
 		btnNewButton = new JButton("Go!");
 		btnNewButton.addActionListener(new ActionListener() {
-			private JFileChooser saveNewAudio;
-			
-			
+			private JFileChooser saveNewAudio;			
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				//Disable sliders
+				//Disable sliders so the values can't be changed while processing
 				AudioSliders.videoLocationSlider.setEnabled(false);
 				AudioSliders.extractLengthAudio.setEnabled(false);
 				AudioSliders.extractStartSlider.setEnabled(false);
@@ -330,19 +347,25 @@ public class Audio extends JPanel{
 					String outputTEMPTextAudio=saveAudioNewFile+"/TEMPORARY_FILE"+rand+".mp4";
 					
 					int totalTime=AudioSliders.extractStartSlider.getValue();
-					//Trim to specified length
+					//Trim to specified length in minutes and seconds
 					int startMinutes=totalTime/60;
 					int startSeconds=totalTime-startMinutes*60;
-					
+					//Trim this as well
 					int trimTime=AudioSliders.extractLengthAudio.getValue();
 					int durMinutes=trimTime/60;
 					int durSeconds=trimTime-durMinutes;
-					
+					//OLD FUNCTIONALITY
+					//There currently exists no way to add silence to the start of audio
+					//This was my planned workaround for adding audio later in the video
+					//but the processing costs were huge
 					int secSilence=AudioSliders.videoLocationSlider.getValue();
+					
+					//Execute the main audio worker class, this worker class will call either
+					//Replace or overlay as nessasary
 					
 					AudioWorker worker=new AudioWorker(null, currentSelectedAudioFile.toString()
 							, outputTEMPTextAudio, 4,startMinutes, startSeconds,durMinutes,durSeconds, secSilence);
-					//builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameTextAudio);
+					
 					worker.execute();
 					
 
@@ -382,14 +405,8 @@ public class Audio extends JPanel{
 
 	//Method to completly strip audio
 	public void stripAudio(String outputType) {
-		// Remove file extension from output file if one exists, and change to .mp4
+		// Remove file extension from output file if one exists, and change to .mp4		
 		
-		
-		//Variable is saveAudioNewFile
-		
-//		String outputNameText=outputPath+"/"+mainGUI.currentSelectedVideoFile.toString();
-//		String[] words = outputNameText.split("\\.");
-//		outputPathNoExtension = words[0];
 		String nameNoExtension=saveRemoveFile.getAbsolutePath()+"/"+mainGUI.currentSelectedVideoFile.getName();
 		nameNoExtension=nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.'));
 		
@@ -400,7 +417,7 @@ public class Audio extends JPanel{
 		//Enter inputs for the worker String currentVideoFilePath, String currentAudioFilePath, String outputNameText, mode select
 		//1-> Silent Video and audio file
 		//2-> Silent Video
-		//3-> Overlay audio to video
+		
 
 		try {
 			if (outputType.equals("video.audio")) {
@@ -411,7 +428,7 @@ public class Audio extends JPanel{
 				
 				
 			}
-			if (outputType.equals("video")||outputType.equals("video.audio")) {
+			else if (outputType.equals("video")||outputType.equals("video.audio")) {
 				// Creates a video file containing the video selected with its audio stripped
 				StripAudioWorker worker=new StripAudioWorker(mainGUI.currentSelectedVideoFile.toString(), null, outputNameTextVideo, 2);
 				builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-vcodec", "copy", "-an", outputNameTextVideo);
@@ -420,11 +437,7 @@ public class Audio extends JPanel{
 			}
 			else {
 				try{
-					// Creates a swing worker to overlay audio on a background thread, as this is a time-consuming task
-					//AudioWorker worker=new AudioWorker(mainGUI.currentSelectedVideoFile.toString(), currentSelectedAudioFile.toString(), outputNameText);
-					// Creates a video file containing the selected video file with the selected audio file overlaid on top of its audio
-					//builder = new ProcessBuilder("avconv", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
-					//worker.execute();
+					
 				}
 				catch (Exception e1) {
 					JOptionPane.showMessageDialog(new JPanel(), "Error!");
@@ -446,6 +459,9 @@ public class Audio extends JPanel{
 
 	}
 
+	//Set of three methods that exist to check if the files are what they say they are
+	//This helps prevent errors
+	
 	// Checks if the selected video file contains audio
 	public boolean checkAudio() throws IOException {
 		ProcessBuilder builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString());

@@ -11,7 +11,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
-
+/**
+ * 
+ * This class manages the internal download functionality on another thread. 
+ * It updates the progress bar on the GUI as nessasary and carries out the bash commands.
+ *
+ */
 
 public class DownloadWorker extends SwingWorker<String, String> {
 

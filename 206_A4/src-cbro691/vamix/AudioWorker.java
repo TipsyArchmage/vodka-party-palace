@@ -14,6 +14,14 @@ import javax.swing.SwingWorker;
 
 
 
+/**
+ * 
+ * This class is the overall worker class for the replace and overlay audio tool.
+ * It first extracts the desired audio as specified by the sliders and then executes another
+ * worker class to carry out the desired operation. 
+ */
+
+
 public class AudioWorker extends SwingWorker {
 
 	private ProcessBuilder builder;
@@ -48,15 +56,15 @@ public class AudioWorker extends SwingWorker {
 		
 		//Extract audio required first
 		if (mode==4){
-			//avconv  -i  $filename -ss $starttime -t $runningtime $outputfile
-			
-			//Save extract file to a temporary location
+						
+			//Save extract file to a temporary location that will be deleted at the end
 			builder.command("avconv", "-ss", 
 					+0+":"+startMin+":"+startSec,"-i",currentAudioFilePath,"-t",0+":"+durationMin+":"+durationSec
 					,"-codec:a aac -strict experimental","copy",outputNameText);
 			
 			
 		}
+		//Process command
 		builder.redirectErrorStream(true);
 		Process process = builder.start();
 		InputStream stdout = process.getInputStream();
@@ -80,22 +88,20 @@ public class AudioWorker extends SwingWorker {
 		//Result message 
 		if(mode==4){
 			
-			//avconv -i 1.mp4 -i 2.mp3 -filter_complex amix=inputs=2:duration=first:dropout_transition=3 -strict experimental TEST.mp4
-			//avconv -i sintel_trailer-480p.mp4 -i TEST.mp4 -map 0 -map 1:0 -c:v copy -c:a copy -ac 1 TES1T.mp4
-
-			
-			//JOptionPane.showMessageDialog(new JPanel(), "The File will automatically set as the current video");
 			Audio.outputTEMPFile=new File(outputNameText);
 			
 			
-			//Check if the user wants to replace or overlay audio
+			//Check if the user wants to replace or overlay audio and executes a worker
+			//NOTE: Overlay functionality was taking a long time to implement and the option
+			//      no longer exists in the final version. However I've left the the code in
+			//      just in case I want to implement it in the future.
 			
 			//Replace
 			if(Audio.replaceAudioOptionRadioBtn.isSelected()){
 				String nameNoExtension=Audio.saveAudioNewFile.getAbsolutePath()+"/"+mainGUI.currentSelectedVideoFile.getName();
 				nameNoExtension=nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.'));
 				String outputName=nameNoExtension+"AUDIOREPLACE.mp4";
-				
+				//Create new OverlayReplaceAudioWorker instance and execute it
 				OverlayReplaceAudioWorker workerReplace=new OverlayReplaceAudioWorker(mainGUI.currentSelectedVideoFile.toString()
 						,Audio.outputTEMPFile.toString(), outputName, 5,secSilence);
 				
@@ -116,20 +122,7 @@ public class AudioWorker extends SwingWorker {
 			}
 			
 		}
-//		else if(mode==5||mode==6){
-//			//deletePlease.delete();
-//			Audio.outputTEMPFile.delete();
-//			AudioSliders.videoLocationSlider.setEnabled(true);
-//			AudioSliders.extractLengthAudio.setEnabled(true);
-//			AudioSliders.extractStartSlider.setEnabled(true);
-//			JOptionPane.showMessageDialog(new JPanel(), "Audio Overlay complete!");
-//			//Auto set current video
-//			mainGUI.currentSelectedVideoFile=new File(outputNameText);
-//			mainGUI.currentVideoDisplay.setText(mainGUI.currentSelectedVideoFile.getName());
-//		}
-//		else {
-//			JOptionPane.showMessageDialog(new JPanel(), "Audio Overlay complete!");
-//		}
+
 	}
 
 }

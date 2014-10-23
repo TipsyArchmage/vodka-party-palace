@@ -31,6 +31,14 @@ import javax.swing.ImageIcon;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+/**
+ * 
+ * This is the MAIN class. It initialises all non specialised parts of the GUI like the title screen and
+ * navigation buttons as well as the main frame. It also calls the other classes that create the more detailed
+ * parts of the GUI.
+ *
+ */
+
 public class mainGUI extends JFrame {
 
 	
@@ -139,12 +147,7 @@ public class mainGUI extends JFrame {
 		//Title
 		titleLabel = new JLabel("VAMIX");
 		menuBar.add(titleLabel);
-		//Panel for the video player
-//		playerPanel = new JPanel();
-//		playerPanel.setBackground(SystemColor.info);
-//		playerPanel.setBounds(3, 24, 420, 286);
-		//setUpMediaSurface();
-		//contentPane.add(playerPanel);
+		
 		
 		/**
 		 * INITIAL PANEL
@@ -270,7 +273,8 @@ public class mainGUI extends JFrame {
 	}
 	
 		
-	//Method to enable so enable and switch between menu options
+	//Method to enable so enable and switch between menu options by setting panels
+	//to visible or not
 	public static void enableButtons(String input) {
 		 
 	        

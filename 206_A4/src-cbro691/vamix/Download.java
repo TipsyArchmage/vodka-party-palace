@@ -46,8 +46,7 @@ import java.beans.PropertyChangeListener;
 
 public class Download extends JPanel {
 
-//	private JPanel contentPane;
-//	private JPanel downloadPanel;
+	
 	private JLabel lblDownload;
 	private JLabel lblEnterUrlOf;	
 	private JLabel openSourceCheckLabel;
@@ -65,7 +64,8 @@ public class Download extends JPanel {
 	static JCheckBox checkBox;
 	
 	/**
-	 * @param args
+	 * This class creates the download GUI panel as well as providing download functionality.
+	 * The actual download is handled by the DownloadWorker class but this manages everything else.
 	 */
 	public Download() {
 		

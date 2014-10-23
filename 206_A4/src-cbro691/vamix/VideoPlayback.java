@@ -38,35 +38,28 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 
+/**
+ * 
+ * This class provides all the GUI components and functionality of video playback.
+ * It takes the currently selected video, creates a media player canvas and creates
+ * buttons that can manipulate the playing file, such as fast forward, skip backwards, stop,
+ * and volume controls. As well as a seek bar that the user can interact with and the normal play/pause
+ * options.
+ * 
+ * This class also includes the functionality for allowing the user to change videos
+ *
+ */
 
 public class VideoPlayback extends JPanel{
-
-	//static JPanel contentPane;
 	
-	static JPanel playerPanel;
 	
-	//protected static JPanel currentVideoPanel;
-	
+	static JPanel playerPanel;	
 	static JTextField currentVideoDisplay;
 	static JButton downloadMenuButton;
 	static JButton textToolsMenuButton;
-	static JButton audioToolsMenuButton;
-	
-	
-	
-	
-		
-	
-	//static JPanel textToolsPanel;
-	
-	
+	static JButton audioToolsMenuButton;	
 	private static int playbackRate=1;
-	private static int end=0;
-	
-	//Important Variables
-	
-	//Variables End
-	
+	private static int end=0;	
 	static EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	static EmbeddedMediaPlayer video;
 	protected static File checkSelectedVideoFile;
@@ -76,41 +69,35 @@ public class VideoPlayback extends JPanel{
 	private static JButton rewindButton;
 	private static JLabel timeDisplay;
 	private static JSlider positionSlider;
-
 	private static JLabel lblCurrentVideoFile;
-
 	private static JButton changeVideoButton;
 	/**
 	 * @param args
 	 */
 	public VideoPlayback() {
 		
+		//First create a panel for the player on the main GUI
 		playerPanel = new JPanel();
 		playerPanel.setBackground(SystemColor.info);
 		playerPanel.setBounds(3, 24, 420, 286);
 		setUpMediaSurface();
-		mainGUI.contentPane.add(playerPanel);
-		
-		
-		
-		
+		mainGUI.contentPane.add(playerPanel);		
 				
-			
+	    //Title label
 		lblCurrentVideoFile = new JLabel("Current Video File");
 		lblCurrentVideoFile.setBounds(0, 0, 259, 21);
 		lblCurrentVideoFile.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		lblCurrentVideoFile.setHorizontalAlignment(SwingConstants.LEFT);
 		lblCurrentVideoFile.setFont(new Font("Tahoma", Font.BOLD, 14));
 		mainGUI.currentVideoPanel.add(lblCurrentVideoFile);
-		//change the current video
-		changeVideoButton = new JButton("Change");
 		
-		//Button to change selected video file
+		//Button to change the current video
+		changeVideoButton = new JButton("Change");
 		changeVideoButton.addActionListener(new ActionListener() {
 			private JFileChooser selectVideoChooser;					
 		
 			public void actionPerformed(ActionEvent e) {
-				//Reset playback stuff to default settings
+				//Reset playback options to default settings
 				playbackRate=1;
 				pauseButton.setEnabled(false);
 				playButton.setEnabled(true);
@@ -128,45 +115,42 @@ public class VideoPlayback extends JPanel{
 					String videoName=selectVideoChooser.getSelectedFile().getName();
 					checkSelectedVideoFile = selectVideoChooser.getSelectedFile();
 					
-					try {
-						//Check that it is a valid video/ audio file
+					try {						
 						int videoLength=0;
 						int accept=0;
-						
-						if(checkVideoAudio()){
-							
-						while(accept==0){
-							mainGUI.currentSelectedVideoFile = selectVideoChooser.getSelectedFile();
-							currentVideoDisplay.setText(videoName);
-							//Enable all the previously disabled buttons
-							mainGUI.enableButtons("all");			
-							
-							
-							
-							video.playMedia(mainGUI.currentSelectedVideoFile.toString());
-							video.parseMedia();
-							videoLength=(int) video.getLength()/1000;
-							video.stop();
-							if(videoLength==0){
-								
+						//Check that it is a valid video/ audio file
+						if(checkVideoAudio()){							
+							while(accept==0){
+								mainGUI.currentSelectedVideoFile = selectVideoChooser.getSelectedFile();
+								currentVideoDisplay.setText(videoName);
+								//Enable all the previously disabled buttons
+								mainGUI.enableButtons("all");						
+								//Parse the media file to get the length.
+								video.playMedia(mainGUI.currentSelectedVideoFile.toString());
+								video.parseMedia();
+								videoLength=(int) video.getLength()/1000;
+								video.stop();
+								if(videoLength==0){
+									//Occasionally the video length is not parsed correctly
+									//This statement ensures it loops until correctly parsed
+								}
+								else{
+									accept=1;
+								}
 							}
-							else{
-								accept=1;
-							}
-						}
 						
-						AudioSliders.videoLocationSlider.setMaximum(videoLength);
-						String videoLengthTime=Audio.getLengthTime(videoLength);
-					
-						AudioSliders.totalVideoLength.setText(videoLengthTime);
+							//Set the maximum values for the video length slider in the AudioSliders class
+							AudioSliders.videoLocationSlider.setMaximum(videoLength);
+							String videoLengthTime=Audio.getLengthTime(videoLength);
+						
+							AudioSliders.totalVideoLength.setText(videoLengthTime);
 						
 						
 						}
+						//Print an error message if it's not a video or audio file
 						else{
 							JOptionPane.showMessageDialog(mainGUI.contentPane,"Not a video or audio file",
-									"Type Error",JOptionPane.ERROR_MESSAGE);   
-								    
-								    
+									"Type Error",JOptionPane.ERROR_MESSAGE);   								    
 						}
 					} catch (IOException e1) {
 						
@@ -182,7 +166,7 @@ public class VideoPlayback extends JPanel{
 		changeVideoButton.setBounds(164, 21, 95, 24);
 		changeVideoButton.setFocusable(false);
 		mainGUI.currentVideoPanel.add(changeVideoButton);
-		//Shows the current video title
+		//Shows the current video title, this is updated in many places throughout the code
 		currentVideoDisplay = new JTextField();
 		currentVideoDisplay.setText("No File Selected");
 		currentVideoDisplay.setFocusable(false);
@@ -191,7 +175,7 @@ public class VideoPlayback extends JPanel{
 		mainGUI.currentVideoPanel.add(currentVideoDisplay);
 		currentVideoDisplay.setColumns(10);
 		
-		//Play
+		//Play button
 		playButton = new JButton("");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -242,7 +226,7 @@ public class VideoPlayback extends JPanel{
 		playButton.setBounds(188, 349, 35, 25);
 		mainGUI.contentPane.add(playButton);
 		
-		//Fast forward
+		//Fast forward button
 		fastForwardButton = new JButton("");
 		fastForwardButton.addActionListener(new ActionListener() {
 			
@@ -259,6 +243,7 @@ public class VideoPlayback extends JPanel{
 					video.setRate(playbackRate);
 					}
 					else{
+					//Once X3 speed has been reached change to normal speed
 						playbackRate=1;
 						video.setRate(1);
 					}
@@ -333,7 +318,7 @@ public class VideoPlayback extends JPanel{
 		mainGUI.contentPane.add(pauseButton);
 		
 		
-		//Add slider for the volume control
+		//Add slider for the volume control and add its listener
 		JSlider slider = new JSlider();
 		slider.setBackground(Color.BLACK);
 		slider.setValue(100);
@@ -375,7 +360,7 @@ public class VideoPlayback extends JPanel{
 		mainGUI.contentPane.add(stopButton);
 		
 		
-		
+		//Start a new timer
 		Timer timer = new Timer(100, new ActionListener() {
 			
 	
@@ -384,7 +369,8 @@ public class VideoPlayback extends JPanel{
 		// minutes, and seconds, and updates the media's elapsed time label and displays it in HH:MM:SS format
 		public void actionPerformed(ActionEvent e) {
 			
-			//Make sure the right button is in place
+			//Make sure the right button is in place, occasionally ran into a problem
+			//Where play icon was showing when it should have been pause and vice versa
 			if(video.isPlaying()){
 				pauseButton.setEnabled(true);						
 				playButton.setEnabled(false);
@@ -392,7 +378,7 @@ public class VideoPlayback extends JPanel{
 				playButton.setVisible(false);
 			}								
 			
-			
+			//Convert the timer time to hours, minutes, and seconds
 			long time = video.getTime();
 			int hours = (int) time / 3600000;
 			int remainder = (int) time - hours * 3600000;
@@ -400,7 +386,7 @@ public class VideoPlayback extends JPanel{
 			remainder = remainder - mins * 60000;
 			int secs = remainder / 1000;
 			
-			//Set seek bar slider
+			//Set seek bar slider position as the video progresses
 			positionSlider.setValue((int) video.getTime()/1000);
 			
 			// Convert from int to String
@@ -420,24 +406,22 @@ public class VideoPlayback extends JPanel{
 			timeDisplay.setText(h + ":" + m + ":" + s);
 			
 			
-			//Make sure the video doesn't stop and disable seeking
-					if((video.getTime()>=(video.getLength()-1000))&&end==0){
-						video.setTime(0);
-						pauseButton.setEnabled(false);
-						playButton.setEnabled(true);
-						pauseButton.setVisible(false);
-						playButton.setVisible(true);
-						end=1;
-						video.pause();
-					}
-				}
-			});		
-		timer.start();
-
-				
-				
-
-				
+			//If the video ever gets to the end it stops playing. This is annoying because it disables
+			//Seek functionality as well as skip and volume control. This makes sure that the playing 
+			//video never ends unless the user wants it to by skipping back to the start and pausing if
+			//the video gets within a second of ending.
+			if((video.getTime()>=(video.getLength()-1000))&&end==0){
+				video.setTime(0);
+				pauseButton.setEnabled(false);
+				playButton.setEnabled(true);
+				pauseButton.setVisible(false);
+				playButton.setVisible(true);
+				end=1;
+				video.pause();
+			}
+		}
+	});		
+	timer.start();			
 
 	}
 	
@@ -494,7 +478,6 @@ public class VideoPlayback extends JPanel{
 		
 		positionSlider.setValue(0);
 		positionSlider.setBounds(3, 311, 420, 16);
-		//positionSlider.addChangeListener(new SliderVideoListener());
 		mainGUI.contentPane.add(positionSlider);
 		positionSlider.setBackground(Color.BLACK);
 		playerPanel.add(mediaPlayerComponent);
@@ -513,7 +496,8 @@ public class VideoPlayback extends JPanel{
 		}
 	}
 	
-	// Checks if the selected file is either a video or audio file
+	// Checks if the selected file is either a video or audio file by using 
+	//the file command in bash and reading the output
 		public static Boolean checkVideoAudio() throws IOException {
 			ProcessBuilder builder = new ProcessBuilder("file", checkSelectedVideoFile.toString());
 			builder.redirectErrorStream(true);

@@ -26,7 +26,17 @@ public class AudioSliders {
 	static JSlider videoLocationSlider;
 
 	/**
-	 * @param args
+	 * This class deals with the sliders on the audio tools page. Initialising them on the
+	 * GUI as well as managing their changes in relation to one another.
+	 * 
+	 * Initially all 3 sliders would have affected each other. The middle slider asking for the length of 
+	 * the audio extract would be bounded by remaining audio as specified by the first slider or by the length
+	 * of the video. It would automatically switch between these values depending on which was lower.
+	 * 
+	 * However my method of changing when the user could specify the overlayed audio to start playing in the video
+	 * was very time consuming and added a huge amount of time to program operations and would have needed a progress bar
+	 * as well as various UI changes. As a reult I dropped that feature and made the third slider simply an indication of
+	 * how much of the video track would be covered by the new audio.
 	 */
 	public AudioSliders() {
 		//Label showing where selection was BAR 1
@@ -109,8 +119,20 @@ public class AudioSliders {
 
 	}
 	
+	/**
+	 * 
+	 * @author wolfe
+	 * Different slider listeners that allow changes in one slider to affect the others
+	 * This allows the amount of audio that can be extracted to dynamically change depending on the start location
+	 * of the audio selected or the length of the video.
+	 *
+	 */
+	
+	
 	class SliderListener1 implements ChangeListener {
 		
+		//Listener for changes in the audio start slider and a check to see if it affects the
+		//second slider
 		public void stateChanged(ChangeEvent e) {
 			int startSliderGap=extractStartSlider.getMaximum()-extractStartSlider.getValue();
 			int videoSliderGap=videoLocationSlider.getMaximum()-videoLocationSlider.getValue();
@@ -118,7 +140,7 @@ public class AudioSliders {
 				extractLengthAudio.setMaximum(videoLocationSlider.getMaximum()-videoLocationSlider.getValue());
 				
 				String audioLengthTime=Audio.getLengthTime(extractLengthAudio.getMaximum());
-				//System.out.print(audioLengthTime);
+				
 				
 				totalLength.setText(audioLengthTime);
 			}
@@ -126,14 +148,14 @@ public class AudioSliders {
 				extractLengthAudio.setMaximum(extractStartSlider.getMaximum()-extractStartSlider.getValue());
 				
 				String audioLengthTime=Audio.getLengthTime(extractLengthAudio.getMaximum());
-				//System.out.print(audioLengthTime);
+				
 				
 				totalLength.setText(audioLengthTime);
 			}
 			
 			
 			JSlider source = (JSlider)e.getSource();
-			//if (!source.getValueIsAdjusting()) {
+			
 			int currentLength = (int)source.getValue();
 			String time=Audio.getLengthTime(currentLength);
 			initialTimeLabel.setText(time);
@@ -142,53 +164,35 @@ public class AudioSliders {
 	}
 	
 	class SliderListener2 implements ChangeListener {
-		
+		//Listener for second slider, it also updates the third slider
 		public void stateChanged(ChangeEvent e) {
 			
 			
 			
 			
 			JSlider source = (JSlider)e.getSource();
-			//if (!source.getValueIsAdjusting()) {
+			
 				int currentLength = (int)source.getValue();
 				String time=Audio.getLengthTime(currentLength);
 				initialLength.setText(time);
 				videoLocationSlider.setValue(extractLengthAudio.getValue());
 				initalVideoLength.setText(time);
-			//}
+			
 		}
 		
 	}
 	
 	class SliderListener3 implements ChangeListener {
-		
+		//Listener for the third, now disabled, slider. All it does is set the number beneath it
 		public void stateChanged(ChangeEvent e) {
-			int startSliderGap=extractStartSlider.getMaximum()-extractStartSlider.getValue();
-			int videoSliderGap=videoLocationSlider.getMaximum()-videoLocationSlider.getValue();
 			
-			if(startSliderGap>=videoSliderGap){
-				extractLengthAudio.setMaximum(videoLocationSlider.getMaximum()-videoLocationSlider.getValue());
-				
-				String audioLengthTime=Audio.getLengthTime(extractLengthAudio.getMaximum());
-				//System.out.print(audioLengthTime);
-				
-				totalLength.setText(audioLengthTime);
-			}
-			else{
-				extractLengthAudio.setMaximum(extractStartSlider.getMaximum()-extractStartSlider.getValue());
-				
-				String audioLengthTime=Audio.getLengthTime(extractLengthAudio.getMaximum());
-				//System.out.print(audioLengthTime);
-				
-				totalLength.setText(audioLengthTime);
-			}
 			JSlider source = (JSlider)e.getSource();
-			//if (!source.getValueIsAdjusting()) {
+			
 			int currentLength = (int)source.getValue();
 			String time=Audio.getLengthTime(currentLength);
 			initalVideoLength.setText(time);
 				
-			//}
+			
 		}
 	}
 
