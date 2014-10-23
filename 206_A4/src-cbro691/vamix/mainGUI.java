@@ -42,7 +42,7 @@ public class mainGUI extends JFrame {
 	private JPanel menuOptionsPanel;
 	protected static JPanel currentVideoPanel;
 	private static JPanel initialPanel;
-	static JTextField currentVideoDisplay;
+	//static JTextField currentVideoDisplay;
 	static JButton downloadMenuButton;
 	static JButton textToolsMenuButton;
 	static JButton audioToolsMenuButton;

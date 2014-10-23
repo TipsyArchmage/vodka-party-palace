@@ -212,7 +212,9 @@ public class Audio extends JPanel{
 				int exitValue=selectAudioChooser.showOpenDialog(mainGUI.contentPane);
 								
 				if (exitValue == JFileChooser.APPROVE_OPTION) {					
-					
+				int accept=0;
+				int audioLength=0;
+				while(accept==0){	
 					currentSelectedAudioFile = selectAudioChooser.getSelectedFile();
 					currentAudioTrack.setText(selectAudioChooser.getSelectedFile().getName());
 					
@@ -241,8 +243,16 @@ public class Audio extends JPanel{
 					
 					audio.playMedia(currentSelectedAudioFile.toString());
 					audio.parseMedia();
-					int audioLength=(int) audio.getLength()/1000;
+					audioLength=(int) audio.getLength()/1000;
 					audio.stop();
+					if(audioLength==0){
+						
+					}
+					else{
+						accept=1;
+					}
+				}	
+					
 					
 //					//Change play button actions for the preview function
 //					mainGUI.video=audio;
@@ -276,7 +286,7 @@ public class Audio extends JPanel{
 		overlayOptionRadioBtn.setFocusable(false);
 		overlayOptionRadioBtn.setBounds(0, 320, 182, 23);
 		
-		mainGUI.audioPanel.add(overlayOptionRadioBtn);
+		//mainGUI.audioPanel.add(overlayOptionRadioBtn);
 
 		//Option to replace audio
 		 replaceAudioOptionRadioBtn = new JRadioButton("Replace Existing Audio");
@@ -284,10 +294,11 @@ public class Audio extends JPanel{
 		replaceAudioOptionRadioBtn.setOpaque(false);
 		replaceAudioOptionRadioBtn.setFocusable(false);
 		replaceAudioOptionRadioBtn.setBounds(0, 342, 195, 23);
+		replaceAudioOptionRadioBtn.setSelected(true);
 		mainGUI.audioPanel.add(replaceAudioOptionRadioBtn);
 		
 		buttonOptionGroup.add(replaceAudioOptionRadioBtn);
-		buttonOptionGroup.add(overlayOptionRadioBtn);
+		//buttonOptionGroup.add(overlayOptionRadioBtn);
 		
 		//Button to start process
 		btnNewButton = new JButton("Go!");
@@ -313,6 +324,7 @@ public class Audio extends JPanel{
 				if (exitValue == JFileChooser.APPROVE_OPTION) {
 					saveAudioNewFile = saveNewAudio.getSelectedFile();
 					
+					//Create temporary file name that will be deleted at the end
 					int rand=(int)(Math.random()*1000); 
 					//Temporary File Location
 					String outputTEMPTextAudio=saveAudioNewFile+"/TEMPORARY_FILE"+rand+".mp4";
@@ -326,30 +338,14 @@ public class Audio extends JPanel{
 					int durMinutes=trimTime/60;
 					int durSeconds=trimTime-durMinutes;
 					
+					int secSilence=AudioSliders.videoLocationSlider.getValue();
+					
 					AudioWorker worker=new AudioWorker(null, currentSelectedAudioFile.toString()
-							, outputTEMPTextAudio, 4,startMinutes, startSeconds,durMinutes,durSeconds);
+							, outputTEMPTextAudio, 4,startMinutes, startSeconds,durMinutes,durSeconds, secSilence);
 					//builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameTextAudio);
 					worker.execute();
 					
-					//builder.command("avconv", "-i", currentAudioFilePath, "-i", currentVideoFilePath, "-c", "copy", outputNameText);
-					//Check whether to overlay or replace audio
-					//Replace
-		//			if(replaceAudioOptionRadioBtn.isSelected()){
-//						String nameNoExtension=saveAudioNewFile.getAbsolutePath()+"/"+mainGUI.currentSelectedVideoFile.getName();
-//						nameNoExtension=nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.'));
-//						String outputName=nameNoExtension+"AUDIOREPLACE.mp4";
-//						AudioWorker workerReplace=new AudioWorker(mainGUI.currentSelectedVideoFile.toString()
-//								,outputTEMPFile.toString(), outputName, 5,0,0,0,0);
-//						//builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameTextAudio);
-//						workerReplace.execute();
-//					}
-//					//Overlay
-//					else{
-//						AudioWorker workerOverlay=new AudioWorker(mainGUI.currentSelectedVideoFile.toString()
-//								, outputTEMPFile.toString(), outputTEMPTextAudio, 6,0,0,0,0);
-//						//builder = new ProcessBuilder("avconv", "-i", mainGUI.currentSelectedVideoFile.toString(), "-map", "0:1", "-c:a", "copy", outputNameTextAudio);
-//						workerOverlay.execute();
-//					}
+
 				}
 				else{
 					AudioSliders.videoLocationSlider.setEnabled(true);

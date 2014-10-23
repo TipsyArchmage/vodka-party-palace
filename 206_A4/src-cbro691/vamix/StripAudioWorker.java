@@ -27,6 +27,7 @@ public class StripAudioWorker extends SwingWorker {
 		
 	}
 
+	
 	@Override
 	protected String doInBackground() throws Exception {
 		// Creates a video file containing the selected video file with the selected audio file overlaid on top of its audio
@@ -38,6 +39,7 @@ public class StripAudioWorker extends SwingWorker {
 			builder = new ProcessBuilder("avconv","-y", "-i", mainGUI.currentSelectedVideoFile.toString(), "-vcodec", "copy", "-an", outputNameText);
 		}
 		
+		//General output
 		builder.redirectErrorStream(true);
 		Process process = builder.start();
 		InputStream stdout = process.getInputStream();

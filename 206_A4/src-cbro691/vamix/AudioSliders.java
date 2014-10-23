@@ -79,7 +79,7 @@ public class AudioSliders {
 				lblSelectTheLength.setBounds(10, 190, 224, 27);
 				mainGUI.audioPanel.add(lblSelectTheLength);
 				
-				videoLocationTitle = new JLabel("<html>When Should the Audio Track start playing in the Video?</html>");
+				videoLocationTitle = new JLabel("<html>How much of the video file will contain the new audio</html>");
 				videoLocationTitle.setBounds(10, 255, 224, 27);
 				mainGUI.audioPanel.add(videoLocationTitle);
 				//Current selection BAR 3
@@ -96,11 +96,13 @@ public class AudioSliders {
 				videoLocationSlider.setValue(0);
 				videoLocationSlider.setSnapToTicks(true);
 				videoLocationSlider.setPaintTicks(true);
+				videoLocationSlider.setPaintTrack(true);
 				videoLocationSlider.addChangeListener(new SliderListener3());
 				videoLocationSlider.setOpaque(false);
 				videoLocationSlider.setFocusable(false);
 				videoLocationSlider.setBorder(null);
 				videoLocationSlider.setBounds(10, 285, 214, 26);
+				videoLocationSlider.setEnabled(false);
 				mainGUI.audioPanel.add(videoLocationSlider);
 				
 				
@@ -135,15 +137,7 @@ public class AudioSliders {
 			int currentLength = (int)source.getValue();
 			String time=Audio.getLengthTime(currentLength);
 			initialTimeLabel.setText(time);
-//			//extractLengthAudio.setValue(0);
-//			extractLengthAudio.setMaximum(extractStartSlider.getMaximum()-currentLength);
-//			
-//			String audioLengthTime=getLengthTime(extractLengthAudio.getMaximum());
-//			//System.out.print(audioLengthTime);
-//			
-//			totalLength.setText(audioLengthTime);
-			
-			//}
+
 		}
 	}
 	
@@ -159,8 +153,8 @@ public class AudioSliders {
 				int currentLength = (int)source.getValue();
 				String time=Audio.getLengthTime(currentLength);
 				initialLength.setText(time);
-				
-				
+				videoLocationSlider.setValue(extractLengthAudio.getValue());
+				initalVideoLength.setText(time);
 			//}
 		}
 		
@@ -171,6 +165,7 @@ public class AudioSliders {
 		public void stateChanged(ChangeEvent e) {
 			int startSliderGap=extractStartSlider.getMaximum()-extractStartSlider.getValue();
 			int videoSliderGap=videoLocationSlider.getMaximum()-videoLocationSlider.getValue();
+			
 			if(startSliderGap>=videoSliderGap){
 				extractLengthAudio.setMaximum(videoLocationSlider.getMaximum()-videoLocationSlider.getValue());
 				

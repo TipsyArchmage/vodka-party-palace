@@ -95,7 +95,7 @@ public class DownloadWorker extends SwingWorker<String, String> {
 				try {
 					if(VideoPlayback.checkVideoAudio()){
 						mainGUI.currentSelectedVideoFile = mainGUI.checkSelectedVideoFile;
-						mainGUI.currentVideoDisplay.setText(finalName);
+						VideoPlayback.currentVideoDisplay.setText(finalName);
 						mainGUI.enableButtons("all");
 					}
 					else{

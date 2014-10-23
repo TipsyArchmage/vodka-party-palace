@@ -130,18 +130,31 @@ public class VideoPlayback extends JPanel{
 					
 					try {
 						//Check that it is a valid video/ audio file
+						int videoLength=0;
+						int accept=0;
+						
 						if(checkVideoAudio()){
+							
+						while(accept==0){
 							mainGUI.currentSelectedVideoFile = selectVideoChooser.getSelectedFile();
 							currentVideoDisplay.setText(videoName);
-						//Enable all the previously disabled buttons
-						mainGUI.enableButtons("all");			
+							//Enable all the previously disabled buttons
+							mainGUI.enableButtons("all");			
+							
+							
+							
+							video.playMedia(mainGUI.currentSelectedVideoFile.toString());
+							video.parseMedia();
+							videoLength=(int) video.getLength()/1000;
+							video.stop();
+							if(videoLength==0){
+								
+							}
+							else{
+								accept=1;
+							}
+						}
 						
-						
-						
-						video.playMedia(mainGUI.currentSelectedVideoFile.toString());
-						video.parseMedia();
-						int videoLength=(int) video.getLength()/1000;
-						video.stop();
 						AudioSliders.videoLocationSlider.setMaximum(videoLength);
 						String videoLengthTime=Audio.getLengthTime(videoLength);
 					
