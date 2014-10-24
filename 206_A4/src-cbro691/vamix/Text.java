@@ -3,7 +3,7 @@ package vamix;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
+import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -21,6 +21,10 @@ import java.awt.Font;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
@@ -29,16 +33,22 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 
 import java.awt.Rectangle;
 import java.io.File;
 
 import javax.swing.JTextArea;
 import javax.swing.JFileChooser;
+
+import vamix.AudioSliders.SliderListener1;
+
+
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -55,10 +65,7 @@ public class Text extends JPanel {
 
 	
 	
-	static JPanel downloadPanel;
-	
-	
-	
+	static JPanel downloadPanel;	
 	static JButton downloadButton;	
 	static JPanel audioPanel;
 	private JLabel textToolsTitle;
@@ -70,17 +77,21 @@ public class Text extends JPanel {
 	private JButton removeTextButton;
 	private JButton saveTextButton;
 	private ButtonGroup buttonOptionGroup=new ButtonGroup();
+	final static FontSelecter fontSelecter=new FontSelecter();
+	final static ColourSelecter colourSelecter=new ColourSelecter();
 	
 	//Important Variables
-	private File saveDownloadFile;
-	private File currentSelectedVideoFile;
 	private File saveTextFile;
-	private File currentSelectedAudioFile;
-	private File saveAudioNewFile;
-	private JTextField enterURLTextField;
-	protected DownloadWorker downloadWorker;
+	private JTextArea userMessageInput;
+	static JSlider textPlacementSlider;
+	static Font fontInput;
+	static int sizeInput=12;
+	static Color fontColour;
 	
-	public Text() {
+	
+	public Text() {		
+		
+		
 		//Title
 		textToolsTitle = new JLabel("Text Tools");
 		textToolsTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -92,17 +103,43 @@ public class Text extends JPanel {
 		//Button Group to contain radio buttons
 		buttonOptionGroup = new ButtonGroup();
 		
-		lblEnterTextMessage = new JLabel("Enter Text Message ");
+		lblEnterTextMessage = new JLabel("<html>Enter Text Message</html>");
 		lblEnterTextMessage.setBounds(10, 38, 234, 14);
 		mainGUI.textToolsPanel.add(lblEnterTextMessage);
 		
 		//Text area to capture user input
-		JTextArea userMessageInput = new JTextArea();
+		userMessageInput = new JTextArea();
 		userMessageInput.setLineWrap(true);
 		userMessageInput.setBorder(new LineBorder(new Color(0, 0, 0)));
 		userMessageInput.setWrapStyleWord(true);
 		userMessageInput.setBounds(20, 63, 214, 73);
 		mainGUI.textToolsPanel.add(userMessageInput);
+		
+		//Make sure the user can't input more characters than the limit
+		userMessageInput.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				if(userMessageInput.getDocument().getLength()>100||userMessageInput.getLineCount()>5){
+					changeError();
+				}
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				if(userMessageInput.getDocument().getLength()>100||userMessageInput.getLineCount()>5){
+					changeError();
+				}
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				if(userMessageInput.getDocument().getLength()>100||userMessageInput.getLineCount()>5){
+					changeError();       		
+				}
+			}
+		});
+		
 		
 		//Button to let the user adjust font and size
 		JButton fontButton = new JButton("Font and Size");
@@ -110,22 +147,44 @@ public class Text extends JPanel {
 		fontButton.setBounds(0, 148, 133, 23);
 		mainGUI.textToolsPanel.add(fontButton);
 		
+		fontButton.addActionListener(new ActionListener() {
+			
+
+			public void actionPerformed(ActionEvent arg0) {
+				
+				fontSelecter.setVisible(true);
+				
+			}
+		});
+		
+		
+		
 		//Button to let the user adjust colour
 		JButton colourButton = new JButton("Colour");
 		colourButton.setFocusable(false);
 		colourButton.setBounds(131, 148, 128, 23);
 		mainGUI.textToolsPanel.add(colourButton);
 		
+		colourButton.addActionListener(new ActionListener() {			
+
+			public void actionPerformed(ActionEvent arg0) {
+				
+				colourSelecter.setVisible(true);
+				
+			}
+		});	
 		
-		JLabel lblWhenDoYou = new JLabel("<html>When do you want the text to appear?</html>");
+		JLabel lblWhenDoYou = new JLabel("<html>When do you want the text to appear in the video?</html>");
 		lblWhenDoYou.setBounds(10, 179, 224, 36);
 		mainGUI.textToolsPanel.add(lblWhenDoYou);
 		
 		//Slider to let the user select where to place the text
-		JSlider textPlacementSlider = new JSlider();
+		textPlacementSlider = new JSlider();
 		textPlacementSlider.setAutoscrolls(true);
 		textPlacementSlider.setOpaque(false);
+		
 		textPlacementSlider.setValue(0);
+		textPlacementSlider.addChangeListener(new SliderListener1());
 		textPlacementSlider.setBounds(19, 210, 200, 26);
 		mainGUI.textToolsPanel.add(textPlacementSlider);
 		
@@ -141,6 +200,8 @@ public class Text extends JPanel {
 		//Slider to choose how long the text displays for
 		textDisplayTimeSlider = new JSlider();
 		textDisplayTimeSlider.setValue(0);
+		textDisplayTimeSlider.addChangeListener(new SliderListener2());
+		textDisplayTimeSlider.setMaximum(textPlacementSlider.getMaximum());
 		textDisplayTimeSlider.setOpaque(false);
 		textDisplayTimeSlider.setAutoscrolls(true);
 		textDisplayTimeSlider.setBounds(19, 274, 200, 26);
@@ -172,6 +233,15 @@ public class Text extends JPanel {
 				
 				if (exitValue == JFileChooser.APPROVE_OPTION) {
 					saveTextFile = saveNewText.getSelectedFile();
+					
+					
+					
+					//Create worker to add text to video
+					TextWorker worker=new TextWorker(sizeInput, fontInput, fontColour,userMessageInput.getText(), 
+							saveTextFile.toString()+"/TextOverlay.mp4");
+					worker.execute();
+					
+					
 				}
 			}
 		});
@@ -180,5 +250,43 @@ public class Text extends JPanel {
 		mainGUI.textToolsPanel.add(saveTextButton);
 
 	}
+	
+	private void changeError() {
+		Runnable changeText = new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(new JPanel(), "Too many characters");
+			}
+		};       
+		SwingUtilities.invokeLater(changeText);
+	}
+	
+class SliderListener1 implements ChangeListener {
+		
+		
+		public void stateChanged(ChangeEvent e) {
+			JSlider source = (JSlider)e.getSource();
+			
+			int currentLength = (int)source.getValue();
+			String time=Audio.getLengthTime(currentLength);
+			textStartTimeLabel.setText(time);
+			textDisplayTimeSlider.setMaximum(source.getMaximum()-source.getValue());
+
+		}
+	}
+
+class SliderListener2 implements ChangeListener {
+	//Listener for second slider, it also updates the third slider
+	public void stateChanged(ChangeEvent e) {			
+		
+		JSlider source = (JSlider)e.getSource();
+		
+			int currentLength = (int)source.getValue();
+			String time=Audio.getLengthTime(currentLength);
+			textDisplayTimeLabel.setText(time);
+		
+	}
+	
+}
 
 }

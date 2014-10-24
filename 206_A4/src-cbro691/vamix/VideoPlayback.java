@@ -141,6 +141,7 @@ public class VideoPlayback extends JPanel{
 						
 							//Set the maximum values for the video length slider in the AudioSliders class
 							AudioSliders.videoLocationSlider.setMaximum(videoLength);
+							Text.textPlacementSlider.setMaximum(videoLength);
 							String videoLengthTime=Audio.getLengthTime(videoLength);
 						
 							AudioSliders.totalVideoLength.setText(videoLengthTime);

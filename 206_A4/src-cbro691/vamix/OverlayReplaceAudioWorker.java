@@ -92,7 +92,7 @@ public class OverlayReplaceAudioWorker extends SwingWorker {
 			}		   
 		   //Different outputs for different error values
 			else {
-			JOptionPane.showMessageDialog(new JPanel(), "Process Failed");
+				JOptionPane.showMessageDialog(new JPanel(), "Process Failed");
 			}
 			
 		

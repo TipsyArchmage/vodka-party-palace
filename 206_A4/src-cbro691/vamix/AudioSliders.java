@@ -165,10 +165,7 @@ public class AudioSliders {
 	
 	class SliderListener2 implements ChangeListener {
 		//Listener for second slider, it also updates the third slider
-		public void stateChanged(ChangeEvent e) {
-			
-			
-			
+		public void stateChanged(ChangeEvent e) {			
 			
 			JSlider source = (JSlider)e.getSource();
 			
