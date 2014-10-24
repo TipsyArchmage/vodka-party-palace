@@ -45,6 +45,12 @@ import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * 
+ * @author wolfe
+ *
+ */
+
 public class Text extends JPanel {
 
 	

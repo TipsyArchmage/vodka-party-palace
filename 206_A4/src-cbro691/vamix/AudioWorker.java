@@ -98,7 +98,10 @@ public class AudioWorker extends SwingWorker {
 			
 			//Replace
 			if(Audio.replaceAudioOptionRadioBtn.isSelected()){
+				//Create title of output file. Original video name combined with audio file name
 				String nameNoExtension=Audio.saveAudioNewFile.getAbsolutePath()+"/"+mainGUI.currentSelectedVideoFile.getName();
+				nameNoExtension=nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.'));
+				nameNoExtension=nameNoExtension+"+"+Audio.currentSelectedAudioFile.getName();
 				nameNoExtension=nameNoExtension.substring(0, nameNoExtension.lastIndexOf('.'));
 				String outputName=nameNoExtension+"AUDIOREPLACE.mp4";
 				//Create new OverlayReplaceAudioWorker instance and execute it

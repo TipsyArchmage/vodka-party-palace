@@ -86,7 +86,7 @@ public class Audio extends JPanel{
 	private File saveDownloadFile;
 	//private File currentSelectedVideoFile;
 	private File saveTextFile;
-	private File currentSelectedAudioFile;
+	static File currentSelectedAudioFile;
 	static File saveAudioNewFile;
 	private EmbeddedMediaPlayer audio;
 	private JTextField enterURLTextField;
@@ -319,7 +319,9 @@ public class Audio extends JPanel{
 		buttonOptionGroup.add(replaceAudioOptionRadioBtn);
 		//buttonOptionGroup.add(overlayOptionRadioBtn);
 		
-		//Button to start process
+		/**
+		 * BUTTON TO START PROCESS
+		 */
 		btnNewButton = new JButton("Go!");
 		btnNewButton.addActionListener(new ActionListener() {
 			private JFileChooser saveNewAudio;			
