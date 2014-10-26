@@ -52,6 +52,10 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
+import vamixHelpers.AudioSliders;
+import vamixWorkers.AudioWorker;
+import vamixWorkers.DownloadWorker;
+import vamixWorkers.StripAudioWorker;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -86,8 +90,8 @@ public class Audio extends JPanel{
 	private File saveDownloadFile;
 	//private File currentSelectedVideoFile;
 	private File saveTextFile;
-	static File currentSelectedAudioFile;
-	static File saveAudioNewFile;
+	public static File currentSelectedAudioFile;
+	public static File saveAudioNewFile;
 	private EmbeddedMediaPlayer audio;
 	private JTextField enterURLTextField;
 	protected DownloadWorker downloadWorker;
@@ -100,7 +104,7 @@ public class Audio extends JPanel{
 	protected int exitValue;
 	private String outputNameTextVideo;
 	private AudioWorker worker;
-	static JRadioButton replaceAudioOptionRadioBtn;
+	public static JRadioButton replaceAudioOptionRadioBtn;
 	/**
 	 * @param args
 	 */
@@ -388,7 +392,7 @@ public class Audio extends JPanel{
 	}
 	
 	//Method to get the length in the right format
-	protected static String getLengthTime(int audioLength) {
+	public static String getLengthTime(int audioLength) {
 		
 		int minutes=audioLength/60;
 		int seconds=audioLength-(minutes*60);

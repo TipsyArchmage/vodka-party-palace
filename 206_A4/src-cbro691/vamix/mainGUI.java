@@ -16,6 +16,7 @@ import java.awt.Component;
 import javax.swing.Box;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Font;
 
@@ -30,6 +31,7 @@ import javax.swing.ImageIcon;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import vamixWorkers.DownloadWorker;
 
 /**
  * 
@@ -42,7 +44,7 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 public class mainGUI extends JFrame {
 
 	
-	static JPanel contentPane;
+	public static JPanel contentPane;
 	private JMenuBar menuBar;
 	private JButton helpButton;
 	private JLabel titleLabel;
@@ -56,12 +58,12 @@ public class mainGUI extends JFrame {
 	static JButton audioToolsMenuButton;
 	static JPanel downloadPanel;
 	static JButton downloadButton;
-	static JPanel audioPanel;
+	public static JPanel audioPanel;
 	static JPanel textToolsPanel;
 		
 	//Important Variables
 	private File saveDownloadFile;
-	static File currentSelectedVideoFile;
+	public static File currentSelectedVideoFile;
 	private File saveTextFile;
 	private File currentSelectedAudioFile;
 	private File saveAudioNewFile;
@@ -70,7 +72,7 @@ public class mainGUI extends JFrame {
 	protected DownloadWorker downloadWorker;
 	static EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	static EmbeddedMediaPlayer video;
-	protected static File checkSelectedVideoFile;
+	public static File checkSelectedVideoFile;
 	
 	/**
 	 * Launch the application.
@@ -139,13 +141,26 @@ public class mainGUI extends JFrame {
 		contentPane.add(menuBar);
 		//Help Button
 		helpButton = new JButton("Help");
+		
+		//Button to open help document
+		helpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File myFile = new File(mainGUI.class.getResource("/textResources/help.pdf").getPath());
+		        try {
+					Desktop.getDesktop().open(myFile);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		helpButton.setFocusable(false);
 		menuBar.add(helpButton);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(40);
 		menuBar.add(horizontalStrut);
 		//Title
-		titleLabel = new JLabel("VAMIX");
+		titleLabel = new JLabel("VAMIX: Visual and Audio Mixer");
 		menuBar.add(titleLabel);
 		
 		

@@ -46,7 +46,10 @@ import java.io.File;
 import javax.swing.JTextArea;
 import javax.swing.JFileChooser;
 
-import vamix.AudioSliders.SliderListener1;
+import vamixHelpers.ColourSelecter;
+import vamixHelpers.FontSelecter;
+import vamixHelpers.AudioSliders.SliderListener1;
+import vamixWorkers.TextWorker;
 
 
 
@@ -57,7 +60,9 @@ import java.beans.PropertyChangeListener;
 
 /**
  * 
- * @author wolfe
+ * This class deals with creating the panel containing the text adding tools.
+ * It provides the user with inputs such as font size, style, and colour.
+ * It also calls the Worker class that deals with the actual functionality.
  *
  */
 
@@ -77,16 +82,16 @@ public class Text extends JPanel {
 	private JButton removeTextButton;
 	private JButton saveTextButton;
 	private ButtonGroup buttonOptionGroup=new ButtonGroup();
-	final static FontSelecter fontSelecter=new FontSelecter();
-	final static ColourSelecter colourSelecter=new ColourSelecter();
+	public final static FontSelecter fontSelecter=new FontSelecter();
+	public final static ColourSelecter colourSelecter=new ColourSelecter();
 	
 	//Important Variables
 	private File saveTextFile;
 	private JTextArea userMessageInput;
 	static JSlider textPlacementSlider;
-	static Font fontInput;
-	static int sizeInput=12;
-	static Color fontColour;
+	public static Font fontInput;
+	public static int sizeInput=12;
+	public static Color fontColour;
 	
 	
 	public Text() {		
@@ -151,7 +156,11 @@ public class Text extends JPanel {
 			
 
 			public void actionPerformed(ActionEvent arg0) {
-				
+				//Make the fontSelecter visable so the user can select the font
+				//Font selecter open source utility created by:
+				//************************************************************
+				// * Copyright 2004-2005,2007-2008 Masahiko SAWAI All Rights Reserved. 
+				//************************************************************
 				fontSelecter.setVisible(true);
 				
 			}
@@ -168,7 +177,7 @@ public class Text extends JPanel {
 		colourButton.addActionListener(new ActionListener() {			
 
 			public void actionPerformed(ActionEvent arg0) {
-				
+				//Make the colour selecter window visible
 				colourSelecter.setVisible(true);
 				
 			}
@@ -251,42 +260,47 @@ public class Text extends JPanel {
 
 	}
 	
+	//Error if the user exceds the character limit
 	private void changeError() {
 		Runnable changeText = new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(new JPanel(), "Too many characters");
+				JOptionPane.showMessageDialog(new JPanel(), "Too many characters, limit is 100");
 			}
 		};       
 		SwingUtilities.invokeLater(changeText);
 	}
 	
-class SliderListener1 implements ChangeListener {
-		
-		
-		public void stateChanged(ChangeEvent e) {
+	
+	//Slider listener class for the first slider which also adjusts the length of the second slider
+	//This is too make sure text can't be added for invalid times.
+	class SliderListener1 implements ChangeListener {
+			
+			
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider)e.getSource();
+				
+				int currentLength = (int)source.getValue();
+				String time=Audio.getLengthTime(currentLength);
+				textStartTimeLabel.setText(time);
+				textDisplayTimeSlider.setMaximum(source.getMaximum()-source.getValue());
+	
+			}
+		}
+	
+	//Basic slider listener to set time label on the second slider
+	class SliderListener2 implements ChangeListener {
+		//Listener for second slider, it also updates the third slider
+		public void stateChanged(ChangeEvent e) {			
+			
 			JSlider source = (JSlider)e.getSource();
 			
-			int currentLength = (int)source.getValue();
-			String time=Audio.getLengthTime(currentLength);
-			textStartTimeLabel.setText(time);
-			textDisplayTimeSlider.setMaximum(source.getMaximum()-source.getValue());
-
+				int currentLength = (int)source.getValue();
+				String time=Audio.getLengthTime(currentLength);
+				textDisplayTimeLabel.setText(time);
+			
 		}
-	}
-
-class SliderListener2 implements ChangeListener {
-	//Listener for second slider, it also updates the third slider
-	public void stateChanged(ChangeEvent e) {			
-		
-		JSlider source = (JSlider)e.getSource();
-		
-			int currentLength = (int)source.getValue();
-			String time=Audio.getLengthTime(currentLength);
-			textDisplayTimeLabel.setText(time);
 		
 	}
-	
-}
 
 }

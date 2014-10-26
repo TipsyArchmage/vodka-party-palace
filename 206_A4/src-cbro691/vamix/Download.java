@@ -39,6 +39,8 @@ import java.io.File;
 import javax.swing.JTextArea;
 import javax.swing.JFileChooser;
 
+import vamixWorkers.DownloadWorker;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
@@ -54,14 +56,14 @@ public class Download extends JPanel {
 	private JLabel lblWhereDoYou;
 	private JTextField txtNoLocationSelected;
 	private JButton changeSaveDownloadButton;
-	static JButton downloadButton;
+	public static JButton downloadButton;
 	private JProgressBar progressBar;	
 	
 	//Important Variables
 	private File saveDownloadFile;
 	private JTextField enterURLTextField;
 	protected DownloadWorker downloadWorker;
-	static JCheckBox checkBox;
+	public static JCheckBox checkBox;
 	
 	/**
 	 * This class creates the download GUI panel as well as providing download functionality.

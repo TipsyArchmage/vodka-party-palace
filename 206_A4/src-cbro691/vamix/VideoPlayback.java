@@ -37,6 +37,7 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
+import vamixHelpers.AudioSliders;
 
 /**
  * 
@@ -54,7 +55,7 @@ public class VideoPlayback extends JPanel{
 	
 	
 	static JPanel playerPanel;	
-	static JTextField currentVideoDisplay;
+	public static JTextField currentVideoDisplay;
 	static JButton downloadMenuButton;
 	static JButton textToolsMenuButton;
 	static JButton audioToolsMenuButton;	
